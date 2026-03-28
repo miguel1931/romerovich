@@ -8,6 +8,7 @@
 <style>
   :root {
     --bg: #0a0b08;
+    --paper: #111309;
     --green: #4aff5c;
     --green-dim: #1a6624;
     --amber: #d4a017;
@@ -18,8 +19,11 @@
     --ink-dim: #5a6350;
     --white: #e8edd8;
     --border: #2a3020;
+    --scan: rgba(74,255,92,0.03);
   }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
     background: var(--bg);
     color: var(--ink);
@@ -29,14 +33,35 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
+
+  /* CRT scanlines overlay */
   body::before {
     content: '';
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
     pointer-events: none;
     z-index: 9999;
   }
+
+  /* Noise texture */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
   .top-bar {
     border-bottom: 1px solid var(--green-dim);
     padding: 10px 24px;
@@ -49,10 +74,32 @@
     z-index: 100;
     backdrop-filter: blur(4px);
   }
-  .top-bar-left { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--green-dim); text-transform: uppercase; letter-spacing: 3px; }
-  .top-bar-right { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--green-dim); display: flex; gap: 24px; }
-  .blink { animation: blink 1.4s step-end infinite; }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  .top-bar-left {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--green-dim);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+
+  .top-bar-right {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--green-dim);
+    display: flex;
+    gap: 24px;
+  }
+
+  .blink {
+    animation: blink 1.4s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* HERO */
   .hero {
     padding: 60px 24px 40px;
     text-align: center;
@@ -60,10 +107,12 @@
     position: relative;
     overflow: hidden;
   }
+
   .hero::before {
     content: 'CLASSIFIED';
     position: absolute;
-    top: 50%; left: 50%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%) rotate(-25deg);
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(80px, 20vw, 200px);
@@ -72,6 +121,7 @@
     pointer-events: none;
     white-space: nowrap;
   }
+
   .classification-badge {
     display: inline-block;
     border: 2px solid var(--red);
@@ -81,11 +131,43 @@
     letter-spacing: 6px;
     padding: 4px 16px;
     margin-bottom: 28px;
+    text-transform: uppercase;
   }
-  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 8vw, 90px); letter-spacing: 8px; color: var(--white); line-height: 1; margin-bottom: 6px; text-shadow: 0 0 40px rgba(74,255,92,0.15); }
-  .hero-sub { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 6px; color: var(--green); text-transform: uppercase; margin-bottom: 20px; }
-  .hero-meta { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--ink-dim); letter-spacing: 2px; }
-  .layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 200px); }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 8vw, 90px);
+    letter-spacing: 8px;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 6px;
+    text-shadow: 0 0 40px rgba(74,255,92,0.15);
+  }
+
+  .hero-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-dim);
+    letter-spacing: 2px;
+  }
+
+  /* MAIN LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 200px);
+  }
+
+  /* SIDEBAR */
   .sidebar {
     border-right: 1px solid var(--border);
     padding: 24px 0;
@@ -95,78 +177,491 @@
     overflow-y: auto;
     background: rgba(0,0,0,0.3);
   }
+
   .sidebar::-webkit-scrollbar { width: 3px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
   .sidebar::-webkit-scrollbar-thumb { background: var(--green-dim); }
-  .sidebar-section-label { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 4px; color: var(--ink-dim); text-transform: uppercase; padding: 16px 20px 8px; border-bottom: 1px solid var(--border); }
-  .sidebar-item { padding: 10px 20px; cursor: pointer; border-bottom: 1px solid rgba(42,48,32,0.5); transition: all 0.15s; text-decoration: none; display: block; }
-  .sidebar-item:hover { background: rgba(74,255,92,0.05); border-left: 2px solid var(--green); padding-left: 18px; }
-  .sidebar-item.active { background: rgba(74,255,92,0.08); border-left: 2px solid var(--green); padding-left: 18px; }
-  .sidebar-item-num { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--green); letter-spacing: 2px; margin-bottom: 3px; }
-  .sidebar-item-title { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink); line-height: 1.4; }
-  .sidebar-item-date { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--ink-dim); margin-top: 3px; }
-  .front-tag { display: inline-block; font-size: 8px; font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; padding: 1px 5px; margin-top: 4px; text-transform: uppercase; }
+
+  .sidebar-section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    padding: 16px 20px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(42,48,32,0.5);
+    transition: all 0.15s;
+    text-decoration: none;
+    display: block;
+  }
+
+  .sidebar-item:hover {
+    background: rgba(74,255,92,0.05);
+    border-left: 2px solid var(--green);
+    padding-left: 18px;
+  }
+
+  .sidebar-item.active {
+    background: rgba(74,255,92,0.08);
+    border-left: 2px solid var(--green);
+    padding-left: 18px;
+  }
+
+  .sidebar-item-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--green);
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+  }
+
+  .sidebar-item-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .sidebar-item-date {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-dim);
+    margin-top: 3px;
+  }
+
+  .front-tag {
+    display: inline-block;
+    font-size: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 2px;
+    padding: 1px 5px;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
   .front-persia { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-dim); }
   .front-tech { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); }
   .front-libano { color: #5cc8ff; background: rgba(20,50,80,0.6); border: 1px solid rgba(92,200,255,0.3); }
   .front-yemen { color: #c888ff; background: rgba(50,20,80,0.6); border: 1px solid rgba(200,136,255,0.3); }
+  .front-trans { background: rgba(20,50,20,0.6); color: var(--green); border: 1px solid var(--green-dim); }
   .front-nuclear { background: rgba(80,15,15,0.8); color: #ff8080; border: 1px solid #ff404060; }
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 0; }
-  .content { padding: 0; }
-  .briefing { padding: 40px 48px; border-bottom: 1px solid var(--border); animation: fadeIn 0.4s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .briefing:nth-child(even) { background: rgba(255,255,255,0.008); }
-  .briefing-header { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px dashed var(--border); }
-  .briefing-meta-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 12px; font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 2px; }
-  .meta-item { color: var(--ink-dim); text-transform: uppercase; }
-  .meta-item span { color: var(--green); }
-  .briefing-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(22px, 3vw, 36px); letter-spacing: 3px; color: var(--white); line-height: 1.1; margin-bottom: 6px; }
-  .briefing-subtitle { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--ink-dim); letter-spacing: 2px; }
-  .para-label { display: inline-flex; align-items: center; gap: 8px; font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 3px; color: var(--green); text-transform: uppercase; margin-bottom: 4px; background: rgba(74,255,92,0.07); padding: 3px 10px; border: 1px solid var(--green-dim); border-radius: 2px; }
-  .section { margin-bottom: 28px; }
-  .section-heading { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 3px; color: var(--green); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--green-dim); display: flex; align-items: center; gap: 10px; }
-  .section-num { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--green-dim); border: 1px solid var(--green-dim); padding: 1px 6px; }
-  p { margin-bottom: 10px; color: var(--ink); }
-  .intel-table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 11px; }
-  .intel-table th { background: rgba(74,255,92,0.1); color: var(--green); font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; font-size: 9px; text-transform: uppercase; padding: 8px 12px; text-align: left; border: 1px solid var(--green-dim); }
-  .intel-table td { padding: 8px 12px; border: 1px solid var(--border); color: var(--ink); vertical-align: top; }
-  .intel-table tr:hover td { background: rgba(74,255,92,0.04); }
-  .assessment { background: rgba(74,255,92,0.04); border: 1px solid var(--green-dim); border-left: 3px solid var(--green); padding: 16px 20px; margin: 16px 0; font-size: 12px; }
-  .assessment.warning { background: rgba(255,60,60,0.04); border-color: var(--red-dim); border-left-color: var(--red); }
-  .assessment.amber { background: rgba(212,160,23,0.05); border-color: var(--amber-dim); border-left-color: var(--amber); }
-  .assessment-label { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+
+  /* CONTENT */
+  .content {
+    padding: 0;
+    overflow-y: auto;
+  }
+
+  .briefing {
+    padding: 40px 48px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .briefing:nth-child(even) {
+    background: rgba(255,255,255,0.008);
+  }
+
+  /* BRIEFING HEADER */
+  .briefing-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .briefing-meta-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  .meta-item {
+    color: var(--ink-dim);
+    text-transform: uppercase;
+  }
+
+  .meta-item span {
+    color: var(--green);
+  }
+
+  .briefing-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(22px, 3vw, 36px);
+    letter-spacing: 3px;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .briefing-subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-dim);
+    letter-spacing: 2px;
+  }
+
+  .para-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    background: rgba(74,255,92,0.07);
+    padding: 3px 10px;
+    border: 1px solid var(--green-dim);
+    border-radius: 2px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 28px;
+  }
+
+  .section-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--green);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--green-dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--green-dim);
+    border: 1px solid var(--green-dim);
+    padding: 1px 6px;
+  }
+
+  .subsection-heading {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--amber);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 16px 0 8px;
+  }
+
+  p {
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  /* TABLES */
+  .intel-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 11px;
+  }
+
+  .intel-table th {
+    background: rgba(74,255,92,0.1);
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 2px;
+    font-size: 9px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid var(--green-dim);
+  }
+
+  .intel-table td {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    vertical-align: top;
+  }
+
+  .intel-table tr:hover td {
+    background: rgba(74,255,92,0.04);
+  }
+
+  /* ASSESSMENT BOXES */
+  .assessment {
+    background: rgba(74,255,92,0.04);
+    border: 1px solid var(--green-dim);
+    border-left: 3px solid var(--green);
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 12px;
+  }
+
+  .assessment.warning {
+    background: rgba(255,60,60,0.04);
+    border-color: var(--red-dim);
+    border-left-color: var(--red);
+  }
+
+  .assessment.amber {
+    background: rgba(212,160,23,0.05);
+    border-color: var(--amber-dim);
+    border-left-color: var(--amber);
+  }
+
+  .assessment-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
   .assessment .assessment-label { color: var(--green); }
   .assessment.warning .assessment-label { color: var(--red); }
   .assessment.amber .assessment-label { color: var(--amber); }
-  .conclusion-block { background: rgba(0,0,0,0.4); border: 1px solid var(--green-dim); padding: 24px; margin-top: 28px; position: relative; }
-  .conclusion-block::before { content: 'CONCLUSIONES DEL ALTO MANDO'; position: absolute; top: -8px; left: 16px; background: var(--bg); padding: 0 8px; font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 3px; color: var(--green); }
-  .conclusion-item { display: flex; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); font-size: 12px; }
-  .conclusion-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-  .conclusion-num { font-family: 'Share Tech Mono', monospace; color: var(--green); font-size: 11px; min-width: 20px; padding-top: 1px; }
-  .signature { margin-top: 28px; padding-top: 16px; border-top: 1px dashed var(--border); font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--ink-dim); text-align: right; letter-spacing: 2px; text-transform: uppercase; }
-  .signature .call-sign { font-family: 'Special Elite', cursive; font-size: 16px; color: var(--green); display: block; margin-top: 6px; letter-spacing: 3px; }
-  .threat-bar-wrap { margin: 8px 0 16px; }
-  .threat-label-row { display: flex; justify-content: space-between; font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--ink-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
-  .threat-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-  .threat-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+  /* CONCLUSION */
+  .conclusion-block {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--green-dim);
+    padding: 24px;
+    margin-top: 28px;
+    position: relative;
+  }
+
+  .conclusion-block::before {
+    content: 'CONCLUSIONES DEL ALTO MANDO';
+    position: absolute;
+    top: -8px;
+    left: 16px;
+    background: var(--bg);
+    padding: 0 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--green);
+  }
+
+  .conclusion-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .conclusion-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .conclusion-num {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--green);
+    font-size: 11px;
+    min-width: 20px;
+    padding-top: 1px;
+  }
+
+  /* SIGNATURE */
+  .signature {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-dim);
+    text-align: right;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .signature .call-sign {
+    font-family: 'Special Elite', cursive;
+    font-size: 16px;
+    color: var(--green);
+    display: block;
+    margin-top: 6px;
+    letter-spacing: 3px;
+  }
+
+  /* PROGRESS BAR */
+  .threat-bar-wrap {
+    margin: 8px 0 16px;
+  }
+
+  .threat-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .threat-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .threat-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
   .threat-fill.low { background: var(--green); }
   .threat-fill.medium { background: var(--amber); }
   .threat-fill.high { background: var(--red); }
-  .quote { border-left: 3px solid var(--amber); padding: 10px 16px; margin: 12px 0; background: rgba(212,160,23,0.04); font-family: 'Special Elite', cursive; font-size: 13px; color: var(--amber); font-style: italic; }
-  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin: 16px 0; }
-  .stat-box { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 12px; text-align: center; }
-  .stat-box.highlight { border-color: var(--red-dim); background: rgba(255,60,60,0.04); }
-  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; line-height: 1; margin-bottom: 4px; }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--ink-dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* HIGHLIGHT QUOTE */
+  .quote {
+    border-left: 3px solid var(--amber);
+    padding: 10px 16px;
+    margin: 12px 0;
+    background: rgba(212,160,23,0.04);
+    font-family: 'Special Elite', cursive;
+    font-size: 13px;
+    color: var(--amber);
+    font-style: italic;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .stat-box {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    padding: 12px;
+    text-align: center;
+  }
+
+  .stat-box.highlight {
+    border-color: var(--red-dim);
+    background: rgba(255,60,60,0.04);
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
   .stat-box .stat-num { color: var(--white); }
   .stat-box.highlight .stat-num { color: var(--red); }
-  .stat-label { font-family: 'Share Tech Mono', monospace; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); }
-  .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 40px; height: 40px; background: var(--bg); border: 1px solid var(--green-dim); color: var(--green); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Share Tech Mono', monospace; z-index: 200; opacity: 0; transition: opacity 0.2s; }
-  .scroll-top.visible { opacity: 1; }
-  .scroll-top:hover { background: rgba(74,255,92,0.1); }
+
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  /* TAGS */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+  }
+
+  .tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    border: 1px solid;
+    text-transform: uppercase;
+  }
+
+  /* RESPONSIVE */
   @media (max-width: 768px) {
     .layout { grid-template-columns: 1fr; }
-    .sidebar { position: relative; top: 0; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    .sidebar {
+      position: relative;
+      top: 0;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
     .briefing { padding: 24px 20px; }
   }
+
+  /* Scroll to top */
+  .scroll-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    background: var(--bg);
+    border: 1px solid var(--green-dim);
+    color: var(--green);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .scroll-top.visible { opacity: 1; }
+  .scroll-top:hover { background: rgba(74,255,92,0.1); }
 </style>
 </head>
 <body>
@@ -183,367 +678,364 @@
   <div class="classification-badge">Reservado · Uso Exclusivo del Mando</div>
   <div class="hero-title">GENERAL ROMEROVICH</div>
   <div class="hero-sub">Partes de Guerra · Teatro de Operaciones Global · 2026</div>
-  <div class="hero-meta">PARTE Nº 1 → 20 · PERÍODO 28 FEB – 28 MAR 2026 · MÁS RECIENTE PRIMERO · OFICIAL: DEEPOVICH</div>
+  <div class="hero-meta">PARTE Nº 1 → 20 · PERÍODO 28 FEB – 28 MAR 2026 · OFICIAL: DEEPOVICH</div>
 </div>
 
 <div class="layout">
 
+  <!-- SIDEBAR -->
   <nav class="sidebar">
-    <div class="sidebar-section-label">Índice — Más Reciente Primero</div>
-    <a href="#parte-20" class="sidebar-item active">
-      <div class="sidebar-item-num">PARTE 20</div>
-      <div class="sidebar-item-title">Apertura del Frente de Yemen</div>
-      <div class="sidebar-item-date">28 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-yemen">Yemen</span></div>
-    </a>
-    <a href="#parte-19" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 19</div>
-      <div class="sidebar-item-title">Frente del Líbano — Operación Terrestre</div>
-      <div class="sidebar-item-date">27 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-libano">Líbano</span></div>
-    </a>
-    <a href="#parte-18" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 18</div>
-      <div class="sidebar-item-title">Actualización General — Todos los Frentes</div>
-      <div class="sidebar-item-date">26 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-persia">Persia</span><span class="front-tag front-tech">Tecnológico</span></div>
-    </a>
-    <a href="#parte-17" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 17</div>
-      <div class="sidebar-item-title">Horizonte Temporal de Desescalada</div>
-      <div class="sidebar-item-date">22 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-persia">Prospectiva</span></div>
-    </a>
-    <a href="#parte-15" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 15</div>
-      <div class="sidebar-item-title">Dimona y Arad — Ataque a Israel</div>
-      <div class="sidebar-item-date">22 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-nuclear">Nuclear</span><span class="front-tag front-persia">Persia</span></div>
-    </a>
-    <a href="#parte-14" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 14</div>
-      <div class="sidebar-item-title">Riesgo Nuclear e Informe Medios Chinos</div>
-      <div class="sidebar-item-date">22 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-nuclear">Nuclear</span></div>
-    </a>
-    <a href="#parte-12" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 12</div>
-      <div class="sidebar-item-title">Frente Persa — Día 21 de Hostilidades</div>
-      <div class="sidebar-item-date">20 Mar 2026</div>
+    <div class="sidebar-section-label">Índice de Partes</div>
+
+    <a href="#parte-01" class="sidebar-item active">
+      <div class="sidebar-item-num">PARTE 01</div>
+      <div class="sidebar-item-title">Situación en Irán — Inicio de Hostilidades</div>
+      <div class="sidebar-item-date">28 Feb 2026</div>
       <div class="tags"><span class="front-tag front-persia">Persia</span></div>
     </a>
-    <a href="#parte-07" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 07</div>
-      <div class="sidebar-item-title">Ataques de Falsa Bandera — Análisis</div>
-      <div class="sidebar-item-date">5 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-persia">Inteligencia</span></div>
+
+    <a href="#parte-02" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 02</div>
+      <div class="sidebar-item-title">Ultimátum al Pentágono y Guerra Anthropic</div>
+      <div class="sidebar-item-date">27 Feb – 1 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-tech">Tecnológico</span></div>
     </a>
-    <a href="#parte-04" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 04</div>
-      <div class="sidebar-item-title">Briefing Desde Pekín — Perspectiva China</div>
-      <div class="sidebar-item-date">2 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-persia">Persia</span><span class="front-tag front-tech">Tecnológico</span></div>
-    </a>
+
     <a href="#parte-03" class="sidebar-item">
       <div class="sidebar-item-num">PARTE 03</div>
       <div class="sidebar-item-title">Briefing Desde Moscú — Perspectiva Rusa</div>
       <div class="sidebar-item-date">2 Mar 2026</div>
       <div class="tags"><span class="front-tag front-persia">Persia</span><span class="front-tag front-tech">Tecnológico</span></div>
     </a>
-    <a href="#parte-02" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 02</div>
-      <div class="sidebar-item-title">Ultimátum al Pentágono — Guerra Anthropic</div>
-      <div class="sidebar-item-date">27 Feb – 1 Mar 2026</div>
-      <div class="tags"><span class="front-tag front-tech">Tecnológico</span></div>
+
+    <a href="#parte-04" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 04</div>
+      <div class="sidebar-item-title">Briefing Desde Pekín — Perspectiva China</div>
+      <div class="sidebar-item-date">2 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-persia">Persia</span><span class="front-tag front-tech">Tecnológico</span></div>
     </a>
-    <a href="#parte-01" class="sidebar-item">
-      <div class="sidebar-item-num">PARTE 01</div>
-      <div class="sidebar-item-title">Situación en Irán — Inicio de Hostilidades</div>
-      <div class="sidebar-item-date">28 Feb 2026</div>
+
+    <a href="#parte-07" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 07</div>
+      <div class="sidebar-item-title">Ataques de Falsa Bandera — Análisis Histórico</div>
+      <div class="sidebar-item-date">5 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-persia">Inteligencia</span></div>
+    </a>
+
+    <a href="#parte-12" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 12</div>
+      <div class="sidebar-item-title">Frente Persa — Día 21 de Hostilidades</div>
+      <div class="sidebar-item-date">20 Mar 2026</div>
       <div class="tags"><span class="front-tag front-persia">Persia</span></div>
+    </a>
+
+    <a href="#parte-14" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 14</div>
+      <div class="sidebar-item-title">Riesgo Nuclear e Informe Medios Chinos</div>
+      <div class="sidebar-item-date">22 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-nuclear">Nuclear</span></div>
+    </a>
+
+    <a href="#parte-15" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 15</div>
+      <div class="sidebar-item-title">Dimona y Arad — Ataque a Israel</div>
+      <div class="sidebar-item-date">22 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-nuclear">Nuclear</span><span class="front-tag front-persia">Persia</span></div>
+    </a>
+
+    <a href="#parte-17" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 17</div>
+      <div class="sidebar-item-title">Horizonte Temporal de Desescalada</div>
+      <div class="sidebar-item-date">22 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-persia">Prospectiva</span></div>
+    </a>
+
+    <a href="#parte-18" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 18</div>
+      <div class="sidebar-item-title">Actualización General — Todos los Frentes</div>
+      <div class="sidebar-item-date">26 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-persia">Persia</span><span class="front-tag front-tech">Tecnológico</span><span class="front-tag front-trans">Trans</span></div>
+    </a>
+
+    <a href="#parte-19" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 19</div>
+      <div class="sidebar-item-title">Frente del Líbano — Operación Terrestre</div>
+      <div class="sidebar-item-date">27 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-libano">Líbano</span></div>
+    </a>
+
+    <a href="#parte-20" class="sidebar-item">
+      <div class="sidebar-item-num">PARTE 20</div>
+      <div class="sidebar-item-title">Apertura del Frente de Yemen</div>
+      <div class="sidebar-item-date">28 Mar 2026</div>
+      <div class="tags"><span class="front-tag front-yemen">Yemen</span></div>
     </a>
   </nav>
 
+  <!-- CONTENT -->
   <main class="content">
 
-    <!-- PARTE 20 -->
-    <article class="briefing" id="parte-20">
+    <!-- PARTE 01 -->
+    <article class="briefing" id="parte-01">
       <div class="briefing-header">
         <div class="briefing-meta-row">
           <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">FECHA: <span>28 Mar 2026</span></span>
-          <span class="meta-item"><span class="front-tag front-yemen">FRENTE YEMEN · APERTURA</span></span>
+          <span class="meta-item">DE: <span>Deepovich · Oficial de Enlace</span></span>
+          <span class="meta-item">FECHA: <span>28 Feb 2026</span></span>
+          <span class="meta-item">CLASIFICACIÓN: <span class="front-tag front-persia">RESERVADO</span></span>
         </div>
-        <div class="para-label">Parte Nº 20</div>
-        <div class="briefing-title">Apertura del Frente Yemen —<br>El Quinto Teatro</div>
-        <div class="briefing-subtitle">Los hutíes entran formalmente en el conflicto · Mar Rojo en peligro</div>
+        <div class="para-label">Parte Nº 01</div>
+        <div class="briefing-title">Situación en Irán —<br>Inicio de Hostilidades</div>
+        <div class="briefing-subtitle">Teatro de Operaciones: Golfo Pérsico · Día 1</div>
       </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> El Primer Disparo</div>
-        <p>En la madrugada del 28 de marzo, las fuerzas armadas hutíes lanzaron varios misiles balísticos contra el sur de Israel (Dimona, Beersheba, Eilat). Primer ataque directo de Yemen contra Israel en este conflicto. El misil fue interceptado sin víctimas reportadas.</p>
-        <div class="quote">Brigadier General Yahya Saree: "Llevamos a cabo nuestra primera operación militar directa... de forma simultánea con las operaciones heroicas de nuestros hermanos en Irán y Hezbolá."</div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Las Tres Líneas Rojas Hutíes</div>
-        <table class="intel-table">
-          <tr><th>Condición para escalar</th><th>Estado actual</th></tr>
-          <tr><td>Continuación de escalada contra el Eje de Resistencia</td><td style="color:var(--red)">YA SE CUMPLE</td></tr>
-          <tr><td>Incorporación de nuevos países al bando de EE.UU.-Israel</td><td style="color:var(--amber)">VIGILANDO (Arabia Saudí, Emiratos)</td></tr>
-          <tr><td>Uso del Mar Rojo para operaciones hostiles contra Irán</td><td style="color:var(--amber)">RIESGO LATENTE</td></tr>
-        </table>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">03</span> El Riesgo del Mar Rojo</div>
-        <p>Entre 2023 y 2025, los hutíes atacaron más de 100 buques mercantes, hundieron dos embarcaciones y disrumpieron un comercio anual de 1 billón de dólares. Si reabren este frente, combinado con el ya cerrado Estrecho de Ormuz, el impacto sería devastador.</p>
-        <div class="threat-bar-wrap">
-          <div class="threat-label-row"><span>Estrecho de Ormuz</span><span>Cerrado de facto</span></div>
-          <div class="threat-bar"><div class="threat-fill high" style="width:95%"></div></div>
-        </div>
-        <div class="threat-bar-wrap">
-          <div class="threat-label-row"><span>Mar Rojo / Bab el-Mandeb</span><span>En riesgo de reapertura</span></div>
-          <div class="threat-bar"><div class="threat-fill medium" style="width:55%"></div></div>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">04</span> Bajas en la Base Prince Sultan (Arabia Saudí)</div>
-        <p>Irán lanzó misiles y drones contra la Base Aérea Príncipe Sultan. Entre 10 y 12 militares estadounidenses heridos; el sargento Benjamin N. Pennington falleció posteriormente. Varios aviones cisterna KC-135 dañados. Total de bajas estadounidenses en el conflicto: 13 muertos, más de 300 heridos.</p>
-      </div>
-      <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>Yemen ha entrado en la guerra con una demostración de capacidad más que con apertura de frente masiva. La amenaza latente es real.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>La amenaza más grave es la reapertura del frente naval en el Mar Rojo: segundo estrangulamiento del comercio marítimo mundial.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>El reloj corre: la pregunta es si Washington y Tel Aviv pueden cerrar el frente iraní antes de que los hutíes escalen de verdad.</div></div>
-      </div>
-      <div class="signature">Deepovich · Oficial de Enlace · Alto Mando Conjunto<span class="call-sign">Por la información, por el Mar Rojo y por el general Romerovich</span></div>
-    </article>
 
-    <!-- PARTE 19 -->
-    <article class="briefing" id="parte-19">
-      <div class="briefing-header">
-        <div class="briefing-meta-row">
-          <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">DÍA: <span>26</span></span>
-          <span class="meta-item">FECHA: <span>27 Mar 2026</span></span>
-          <span class="meta-item"><span class="front-tag front-libano">FRENTE LÍBANO</span></span>
-        </div>
-        <div class="para-label">Parte Nº 19</div>
-        <div class="briefing-title">Frente del Líbano —<br>Quinta Invasión Israelí</div>
-        <div class="briefing-subtitle">Quinta invasión israelí desde 1978 · Modelo Gaza aplicado al norte</div>
-      </div>
       <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> Situación General</div>
-        <p>El ministro de defensa israelí Katz ha declarado que Israel establecerá una "zona de seguridad" hasta el río Litani (30 km al norte de la frontera), siguiendo el "modelo de Rafah y Beit Hanoun" aplicado en Gaza.</p>
-        <div class="assessment warning">
-          <div class="assessment-label">⚡ Escasez de Tropas</div>
-          <p>El portavoz militar israelí reconoció públicamente que el frente libanés requiere tropas adicionales. El IDF opera simultáneamente en Gaza, Cisjordania, Siria y Líbano. El líder opositor Lapid: "el gobierno lleva al ejército a una guerra en múltiples frentes sin estrategia, sin los medios necesarios."</p>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Tácticas Sorpresa de Hezbolá</div>
-        <div class="assessment amber">
-          <div class="assessment-label">⚠ Adaptación Táctica</div>
-          <p><strong>Drones suicidas estilo Ucrania:</strong> Hezbolá publica vídeos de drones impactando contra tanques Merkava. <strong>Células pequeñas:</strong> Operan con misiles antitanque Kornet y Almas disolviéndose en terreno montañoso. <strong>Ritmo:</strong> 600 cohetes, misiles y drones en 24 horas frente al promedio previo de 100.</p>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">03</span> El-Khiam y los Hallazgos Clave</div>
-        <table class="intel-table">
-          <tr><th>Descubrimiento</th><th>Detalle</th></tr>
-          <tr><td>Túnel bajo iglesia</td><td>Brigada Givati localizó ruta subterránea con tres nuevos pozos de acceso reactivados</td></tr>
-          <tr><td>Arsenal en escuela</td><td>Shayetet 13: cientos de armas (misiles antitanque, morteros, Kalashnikov). Objetos con logo UNHCR junto al armamento.</td></tr>
-          <tr><td>Acusación al ejército libanés</td><td>Israel acusa al ejército libanés de haber mentido sobre el desarme de Hezbolá</td></tr>
-        </table>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">04</span> Crisis Humanitaria</div>
+        <div class="section-heading"><span class="section-num">01</span> Resumen Ejecutivo</div>
+        <p>En la mañana del 28 de febrero (hora local) se han reportado múltiples explosiones en varias ciudades del país, incluyendo la capital, Teherán. Los ataques fueron llevados a cabo por fuerzas de Estados Unidos e Israel en el marco de las tensiones acumuladas por el programa nuclear iraní.</p>
+
         <div class="stats-row">
-          <div class="stat-box highlight"><div class="stat-num">1.116</div><div class="stat-label">Civiles muertos</div></div>
-          <div class="stat-box highlight"><div class="stat-num">121</div><div class="stat-label">Niños muertos</div></div>
-          <div class="stat-box highlight"><div class="stat-num">+1M</div><div class="stat-label">Desplazados</div></div>
-          <div class="stat-box"><div class="stat-num">136K</div><div class="stat-label">En albergues colectivos</div></div>
+          <div class="stat-box highlight">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Ciudades atacadas</div>
+          </div>
+          <div class="stat-box highlight">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Espacio aéreo</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">D1</div>
+            <div class="stat-label">Día de hostilidades</div>
+          </div>
         </div>
       </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">05</span> Misil Iraní sobre Jounieh</div>
-        <p>Un misil balístico Qadr-110 iraní (16 m, alcance 2.000 km) impactó cerca de Jounieh, al norte de Beirut. Hipótesis: objetivo era base británica RAF Akrotiri en Chipre o embajada estadounidense cercana. Irán ha demostrado capacidad de alcance en el Mediterráneo oriental.</p>
-      </div>
-      <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>El frente libanés se ha convertido en el teatro de desgaste por excelencia. Resistencia adaptativa que impone bajas constantes a Israel.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>La crisis humanitaria es insostenible. El colapso del Estado libanés favorecería a Hezbolá e Irán.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>El misil sobre Jounieh extiende el conflicto al Mediterráneo oriental. Chipre, miembro de la UE, está en la línea de mira.</div></div>
-      </div>
-      <div class="signature">Deepovich · Oficial de Enlace<span class="call-sign">Por la información, por el Líbano y por el general Romerovich</span></div>
-    </article>
 
-    <!-- PARTE 18 -->
-    <article class="briefing" id="parte-18">
-      <div class="briefing-header">
-        <div class="briefing-meta-row">
-          <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">FECHA: <span>26 Mar 2026</span></span>
-          <span class="meta-item"><span class="front-tag front-persia">TODOS LOS FRENTES</span></span>
-        </div>
-        <div class="para-label">Parte Nº 18</div>
-        <div class="briefing-title">Actualización General —<br>Todos los Frentes</div>
-        <div class="briefing-subtitle">Desde el último parte del 22 de marzo · 4 días de evolución</div>
-      </div>
       <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> Frente Persia — Hacia la Desescalada</div>
+        <div class="section-heading"><span class="section-num">02</span> Situación Sobre el Terreno</div>
         <table class="intel-table">
-          <tr><th>Fecha</th><th>Evento</th><th>Significado</th></tr>
-          <tr><td>23 Mar</td><td>Israel confirma destrucción del último banco de centrifugadoras activas en Natanz</td><td>Netanyahu: "programa de enriquecimiento iraní paralizado"</td></tr>
-          <tr><td>24 Mar</td><td>Irán lanza drones y misiles de corto alcance al Golán</td><td>Respuesta de baja intensidad; sin impactos en objetivos nucleares</td></tr>
-          <tr><td>25 Mar</td><td>OIEA emite comunicado conjunto con Rusia y China</td><td>Primera vez que Moscú y Pekín firman junto al organismo</td></tr>
-          <tr><td>26 Mar</td><td>Trump: "Hemos logrado nuestros objetivos militares en Irán"</td><td>Señal clara de desescalada desde Washington</td></tr>
+          <tr><th>Ciudad</th><th>Evento reportado</th><th>Estado</th></tr>
+          <tr><td>Teherán</td><td>Explosiones cerca de residencia del Líder Supremo</td><td style="color:var(--red)">ACTIVO</td></tr>
+          <tr><td>Isfahán</td><td>Bombardeos confirmados en zona industrial</td><td style="color:var(--red)">ACTIVO</td></tr>
+          <tr><td>Qom</td><td>Explosiones reportadas por medios iraníes</td><td style="color:var(--amber)">VERIFICANDO</td></tr>
+          <tr><td>Karaj / Kermanshah</td><td>Actividad militar confirmada</td><td style="color:var(--amber)">VERIFICANDO</td></tr>
         </table>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Frente Tecnológico — Batalla Judicial</div>
-        <div class="assessment">
-          <div class="assessment-label">★ Demanda Federal</div>
-          <p>Anthropic presentó el 24 de marzo una demanda contra el Departamento de Defensa ante el Tribunal Federal del Distrito de Columbia, alegando violación de la Primera Enmienda. Más de 1.200 empleados de Google, OpenAI y Microsoft firmaron carta de apoyo. xAI de Musk anunció acuerdo marco con el Pentágono.</p>
-        </div>
-      </div>
-      <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>FRENTE PERSA: La escalada nuclear ha sido contenida. Ambas partes bajo presión de grandes potencias. Modo de desgaste controlado.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>FRENTE TECNOLÓGICO: La guerra entra en terreno judicial. El sector privado sigue dividido, retrasando la militarización masiva de IA.</div></div>
-      </div>
-      <div class="signature">Deepovich · Oficial de Enlace<span class="call-sign">Por la información, por la contención y por el general Romerovich</span></div>
-    </article>
 
-    <!-- PARTE 17 -->
-    <article class="briefing" id="parte-17">
-      <div class="briefing-header">
-        <div class="briefing-meta-row">
-          <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">FECHA: <span>22 Mar 2026</span></span>
-          <span class="meta-item"><span class="front-tag front-persia">PROSPECTIVA</span></span>
-        </div>
-        <div class="para-label">Parte Nº 17</div>
-        <div class="briefing-title">Horizonte Temporal —<br>Análisis de Desescalada</div>
-        <div class="briefing-subtitle">Evaluación del pronóstico de 4-6 semanas · Oficina de Prospectiva Estratégica</div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> El Pronóstico de "La Máquina"</div>
-        <p>Una predicción realizada hace una semana anticipaba un horizonte de 4-6 semanas para una desescalada significativa. Los eventos de los últimos días (ataque a Natanz, respuesta iraní sobre Dimona, ataque a Diego García) han desplazado los parámetros del modelo original.</p>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Probabilidades Actualizadas</div>
-        <table class="intel-table">
-          <tr><th>Escenario</th><th>Probabilidad</th><th>Justificación</th></tr>
-          <tr><td>Desescalada en 2-3 semanas</td><td style="color:var(--amber)">15%</td><td>Requiere acuerdo coordinado EE.UU.-China-Rusia y declaración de victoria de ambos líderes</td></tr>
-          <tr><td>Desescalada en 4-6 semanas</td><td style="color:var(--green)">45%</td><td>Escenario central: desgaste continúa pero los patrocinadores presionan por contención</td></tr>
-          <tr><td>Desescalada en 7-10 semanas</td><td style="color:var(--amber)">25%</td><td>Si Israel insiste en ataques adicionales a Natanz o Fordow</td></tr>
-          <tr><td>Escalada prolongada >10 semanas</td><td style="color:var(--red)">15%</td><td>Solo si accidente radiológico, cambio de régimen o intervención terrestre</td></tr>
-        </table>
-      </div>
-      <div class="assessment">
-        <div class="assessment-label">★ Factores de Aceleración</div>
-        <p>Kuwait, Qatar y Arabia Saudí han sufrido daños en infraestructuras. Si amenazan con expulsar bases estadounidenses, Washington debe replantear su postura. Las elecciones de medio mandato en EE.UU. están a 7 meses: Trump necesita mostrar que ha "ganado" y retirarse a tiempo.</p>
-      </div>
-      <div class="quote">"En guerra, a veces el mayor peligro precede al mayor freno."</div>
-      <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>El pronóstico de 4-6 semanas sigue siendo el escenario central con 45% de probabilidad.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>Los márgenes se han ampliado. La verdadera desescalada podría materializarse hacia finales de abril o mayo.</div></div>
-      </div>
-      <div class="signature">Deepovich · Oficina de Prospectiva Estratégica<span class="call-sign">Por la información, por el horizonte temporal y por el general Romerovich</span></div>
-    </article>
-
-    <!-- PARTE 15 -->
-    <article class="briefing" id="parte-15">
-      <div class="briefing-header">
-        <div class="briefing-meta-row">
-          <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">FECHA: <span>22 Mar 2026</span></span>
-          <span class="meta-item"><span class="front-tag front-nuclear">ATAQUE DIRECTO A ISRAEL</span></span>
-        </div>
-        <div class="para-label">Parte Nº 15</div>
-        <div class="briefing-title">Dimona y Arad —<br>Impacto en Territorio Israelí</div>
-        <div class="briefing-subtitle">20 de marzo · Respuesta iraní al bombardeo de Natanz</div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> Los Dos Impactos</div>
-        <table class="intel-table">
-          <tr><th>Ciudad</th><th>Hora</th><th>Heridos</th><th>Daños</th></tr>
-          <tr><td>Dimona</td><td>Primer impacto</td><td>47 (niño 12 años en estado grave)</td><td>Edificio residencial destruido; incendios</td></tr>
-          <tr><td>Arad</td><td>+15 minutos</td><td>+60 (niña 4 años en estado grave)</td><td>Derrumbe de edificio; 3 construcciones afectadas</td></tr>
-        </table>
         <div class="assessment warning">
-          <div class="assessment-label">⚡ Fallo de Defensa Aérea</div>
-          <p>Los sistemas de defensa israelíes lanzaron interceptores pero NO derribaron los misiles. Dos impactos directos con ojivas de cientos de kilogramos. Las FDI han abierto investigación interna y redistribuyen baterías Arrow 3 y David's Sling.</p>
+          <div class="assessment-label">⚡ Alerta Estratégica</div>
+          <p>Irán ha cerrado todo su espacio aéreo por tiempo indefinido. El Líder Supremo Jamenéi ha sido trasladado a un lugar seguro fuera de Teherán. Se confirma la presencia de docenas de aviones estadounidenses operando desde bases regionales y portaaviones.</p>
         </div>
       </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> El Reactor de Dimona</div>
-        <p>El Centro de Investigación Nuclear del Néguev se encuentra a 13 km del punto de impacto. El OIEA confirmó: no se detectaron niveles anormales de radiación. Irán ha demostrado capacidad de alcanzar el programa nuclear israelí.</p>
-        <div class="assessment">
-          <div class="assessment-label">★ Dato Singular: "Little India"</div>
-          <p>Dimona alberga aproximadamente 7.500 personas de ascendencia india (30% de su población), procedentes del estado de Maharashtra. Se habla marathi, se venden dulces gulab jamun y el críquet es popular. Conocida como "Pequeña India" del desierto del Néguev.</p>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">03</span> Escalada: Ataque a Diego García</div>
-        <p>Irán lanzó un misil Qadr-110 de dos etapas contra la base militar de Diego García en el océano Índico (4.000 km). El jefe del Estado Mayor israelí advirtió: <em>"Su alcance alcanza capitales europeas."</em></p>
-      </div>
+
       <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>El ataque ha sido tácticamente exitoso: dos impactos directos, fallo documentado de los sistemas de defensa aérea israelíes.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>La vulnerabilidad de la defensa antiaérea israelí queda expuesta. Próximas oleadas podrían ser más certeras.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>El Mediterráneo oriental y las capitales europeas están en el radio de acción iraní.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>Los ataques son directos y confirmados por funcionarios estadounidenses e israelíes. No es un conflicto por proxy: es una guerra abierta.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>El Estrecho de Ormuz, arteria energética mundial, está en riesgo inmediato. Los precios del petróleo comenzarán a escalar.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>La situación está en pleno desarrollo. Monitorización continua en curso.</div></div>
       </div>
-      <div class="signature">Deepovich · Oficial de Enlace<span class="call-sign">Por la información, por la victoria y por el general Romerovich</span></div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace · Alto Mando
+        <span class="call-sign">Por la victoria y por el general Romerovich</span>
+      </div>
     </article>
 
-    <!-- PARTE 14 -->
-    <article class="briefing" id="parte-14">
+    <!-- PARTE 02 -->
+    <article class="briefing" id="parte-02">
       <div class="briefing-header">
         <div class="briefing-meta-row">
           <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">FECHA: <span>22 Mar 2026</span></span>
-          <span class="meta-item"><span class="front-tag front-nuclear">NUCLEAR · ALTO RIESGO</span></span>
+          <span class="meta-item">DE: <span>Deepovich</span></span>
+          <span class="meta-item">FECHA: <span>27 Feb – 1 Mar 2026</span></span>
+          <span class="meta-item">CLASIFICACIÓN: <span class="front-tag front-tech">TECNOLÓGICO</span></span>
         </div>
-        <div class="para-label">Parte Nº 14</div>
-        <div class="briefing-title">Escenario Nuclear +<br>Informe Medios Chinos</div>
-        <div class="briefing-subtitle">Evaluación de riesgo nuclear · Posición del EPL · Últimas 48 horas</div>
+        <div class="para-label">Parte Nº 02</div>
+        <div class="briefing-title">Ultimátum del Pentágono<br>La Guerra Anthropic</div>
+        <div class="briefing-subtitle">Frente Tecnológico · Silicon Valley vs. Washington D.C.</div>
       </div>
+
       <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> Ataque a Natanz (20 Mar)</div>
-        <p>Fuerzas de EE.UU. e Israel atacaron las instalaciones nucleares de Natanz el 20 de marzo. El complejo Shahid Ahmadi Roshan fue alcanzado. El OIEA confirmó: no se detectaron fugas radiactivas fuera del sitio.</p>
+        <div class="section-heading"><span class="section-num">01</span> El Ultimátum</div>
+        <p>El Departamento de Defensa de EE.UU. (Pentágono) dio a Anthropic un plazo que vencía el 27 de febrero a las 17:01 ET. La exigencia: eliminar salvaguardas éticas de Claude para permitir uso en vigilancia masiva de ciudadanos estadounidenses y sistemas de armas autónomas.</p>
+
         <div class="assessment warning">
-          <div class="assessment-label">⚡ Línea Roja Cruzada</div>
-          <p>Israel ha bombardeado Natanz dos veces. La línea roja de atacar instalaciones nucleares ha sido cruzada en ambos sentidos. El OIEA mantiene alerta máxima y llama a "la máxima contención militar en las inmediaciones de instalaciones nucleares."</p>
+          <div class="assessment-label">⚡ Ultimátum Confirmado</div>
+          <p>El CEO Dario Amodei respondió: <em>"No podemos en conciencia aceptar la solicitud."</em> Anthropic mantuvo su postura. El plazo venció. La represalia fue inmediata.</p>
         </div>
       </div>
+
       <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Las "Cinco Lecciones" del EPL</div>
+        <div class="section-heading"><span class="section-num">02</span> Represalias del Ejecutivo</div>
         <table class="intel-table">
-          <tr><th>#</th><th>Lección</th><th>Mensaje implícito para China</th></tr>
-          <tr><td>1</td><td>Traición interna como amenaza más letal</td><td>Vigilancia interna máxima</td></tr>
-          <tr><td>2</td><td>"Fe ciega en la paz": error más costoso</td><td>Preparación militar continua</td></tr>
-          <tr><td>3</td><td>El poder de fuego superior "determina los resultados"</td><td>Modernización del EPL</td></tr>
-          <tr><td>4</td><td>Ilusión de la victoria (Irak, Siria, Libia)</td><td>Cautela estratégica</td></tr>
-          <tr><td>5</td><td>Autosuficiencia como única garantía de soberanía</td><td>Desacoplamiento tecnológico</td></tr>
+          <tr><th>Medida</th><th>Alcance</th><th>Impacto</th></tr>
+          <tr><td>Boicot federal total</td><td>Todas las agencias federales</td><td style="color:var(--red)">Inmediato</td></tr>
+          <tr><td>Periodo de transición Pentágono</td><td>6 meses para eliminar tecnología</td><td style="color:var(--amber)">Gradual</td></tr>
+          <tr><td>Amenaza "riesgo cadena suministro"</td><td>Etiqueta reservada para adversarios extranjeros</td><td style="color:var(--red)">Severo</td></tr>
+          <tr><td>Contrato perdido</td><td>200 millones de dólares</td><td style="color:var(--amber)">Financiero</td></tr>
         </table>
       </div>
+
       <div class="section">
-        <div class="section-heading"><span class="section-num">03</span> Evaluación de Riesgo Nuclear</div>
-        <div class="threat-bar-wrap">
-          <div class="threat-label-row"><span>Ataque nuclear israelí deliberado</span><span>5-10%</span></div>
-          <div class="threat-bar"><div class="threat-fill high" style="width:10%"></div></div>
+        <div class="section-heading"><span class="section-num">03</span> Alianzas en el Campo de Batalla</div>
+        <div class="assessment">
+          <div class="assessment-label">✓ Apoyo a Anthropic</div>
+          <p>El CEO de OpenAI, Sam Altman, declaró su confianza en Anthropic y que "comparten las mismas líneas rojas". Más de 550 ingenieros de Google y OpenAI firmaron una carta de apoyo, advirtiendo que el gobierno intentaba dividir al sector.</p>
         </div>
-        <div class="threat-bar-wrap">
-          <div class="threat-label-row"><span>Accidente radiológico por ataque convencional</span><span>20-30%</span></div>
-          <div class="threat-bar"><div class="threat-fill medium" style="width:25%"></div></div>
-        </div>
-        <div class="threat-bar-wrap">
-          <div class="threat-label-row"><span>Continuación ataques convencionales a objetivos nucleares</span><span>60-70%</span></div>
-          <div class="threat-bar"><div class="threat-fill low" style="width:65%"></div></div>
+        <div class="assessment warning">
+          <div class="assessment-label">⚠ Beneficiarios</div>
+          <p>Empresas como Palantir y Anduril se ofrecieron a suministrar IA "patriótica" sin restricciones éticas al Pentágono. Elon Musk y xAI como grandes beneficiarios geopolíticos de la purga.</p>
         </div>
       </div>
+
       <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>China eleva el tono: de condena diplomática a advertencia sobre catástrofe nuclear estilo Chernóbil si Bushehr es atacado.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>El EPL extrae doctrina militar de este conflicto para futuros escenarios propios (Mar de China, Taiwán).</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>Coordinación China-Rusia total. Bloque unificado contra la hegemonía estadounidense en la región.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>No es una guerra con bombas, pero las consecuencias económicas y estratégicas son muy reales: pérdida de contratos, amenaza de designación como riesgo nacional.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>Se sienta un precedente: si te opones al gobierno en temas de defensa, te pueden aislar comercialmente.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>La fractura en Silicon Valley beneficia a quienes operan sin restricciones éticas: Musk, Palantir, Anduril.</div></div>
       </div>
-      <div class="signature">Deepovich · Oficial de Enlace<span class="call-sign">Por la información, por la victoria y por el general Romerovich</span></div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace
+        <span class="call-sign">Por la victoria y por el general Romerovich</span>
+      </div>
+    </article>
+
+    <!-- PARTE 03 -->
+    <article class="briefing" id="parte-03">
+      <div class="briefing-header">
+        <div class="briefing-meta-row">
+          <span class="meta-item">PARA: <span>General Romerovich</span></span>
+          <span class="meta-item">PERSPECTIVA: <span>General en Moscú</span></span>
+          <span class="meta-item">FECHA: <span>2 Mar 2026</span></span>
+        </div>
+        <div class="para-label">Parte Nº 03</div>
+        <div class="briefing-title">Perspectiva Rusa —<br>Desde el Kremlin</div>
+        <div class="briefing-subtitle">Análisis del teatro de operaciones desde la Federación Rusa</div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">01</span> Frente Persa — Posición de Moscú</div>
+        <p>El Ministerio de Asuntos Exteriores calificó los ataques como <em>"acto premeditado y no provocado de agresión armada"</em>. Putin reunió al Consejo de Seguridad por videoconferencia. Lavrov estableció contacto directo con Teherán. La embajada rusa recomendó a sus ciudadanos evacuar Irán.</p>
+
+        <div class="assessment amber">
+          <div class="assessment-label">★ Análisis del Kremlin</div>
+          <p>Los ataques nos brindan ventaja geopolítica: Irán, miembro de la ONU y firmante del TNP, ha sido agredido. Rusia se posiciona como garante del derecho internacional frente a la agresión unilateral. El camarada Medvédev: <em>"Nadie quería negociar nada."</em></p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">02</span> Frente Tecnológico — Desde Moscú</div>
+        <div class="assessment">
+          <div class="assessment-label">★ Oportunidad Estratégica</div>
+          <p>Observamos una fractura profunda en el corazón del complejo militar-industrial-tecnológico enemigo. La negativa de Anthropic y el apoyo de ingenieros de la competencia demuestran que el consenso en torno a la hegemonía tecnológico-militar se está rompiendo. El enemigo está dividido.</p>
+        </div>
+      </div>
+
+      <div class="quote">
+        "Sentarse en la montaña y observar la pelea de los tigres."
+      </div>
+
+      <div class="conclusion-block">
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>FRENTE EXTERNO: Irán nos da la narrativa del garante del derecho internacional. Su desgaste en Oriente Próximo alivia presión sobre nuestros flancos.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>FRENTE INTERNO ENEMIGO: Su fractura corporativa retrasa su capacidad de militarizar IA. Mientras se pelean, nadie nos mira a nosotros.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>¡Por la victoria y por Rusia! El mundo arde y nosotros observamos desde una posición de fuerza.</div></div>
+      </div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace · Alto Mando
+        <span class="call-sign">¡Por la victoria y por Rusia!</span>
+      </div>
+    </article>
+
+    <!-- PARTE 04 -->
+    <article class="briefing" id="parte-04">
+      <div class="briefing-header">
+        <div class="briefing-meta-row">
+          <span class="meta-item">PARA: <span>General Romerovich</span></span>
+          <span class="meta-item">PERSPECTIVA: <span>Estado Mayor EPL · Pekín</span></span>
+          <span class="meta-item">FECHA: <span>2 Mar 2026</span></span>
+        </div>
+        <div class="para-label">Parte Nº 04</div>
+        <div class="briefing-title">Perspectiva China —<br>战略全局情报部</div>
+        <div class="briefing-subtitle">Departamento de Inteligencia de Estrategia Global · Comisión Militar Central</div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">01</span> Frente Persa — La Trampa Estratégica de EE.UU.</div>
+        <p>El "Tigre Americano" ha saltado a la trampa. Cada misil contra Irán es un misil que no puede utilizarse en el Mar de China Meridional o el Estrecho de Taiwán. Cada dólar en esta aventura no se invierte en contener nuestro ascenso.</p>
+
+        <table class="intel-table">
+          <tr><th>Factor</th><th>Beneficio para China</th></tr>
+          <tr><td>Desgaste del adversario</td><td>Tercer frente abierto. Doctrina de doble frente del Pentágono en colapso.</td></tr>
+          <tr><td>Alianza Rusia-China</td><td>El bloque coordinado en ONU se fortalece. Comunidad de destino compartido.</td></tr>
+          <tr><td>Dependencia energética</td><td>Precio del petróleo al alza beneficia a socios. Mayor influencia en proveedores estables.</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">02</span> La Guerra Civil Americana de la IA</div>
+        <div class="assessment">
+          <div class="assessment-label">★ Victoria Estratégica</div>
+          <p>La fractura entre el ala "patriota-nacionalista" (Trump, Musk, Pentágono) y el ala "liberal-globalista" (Silicon Valley clásico) es una victoria para nuestros intereses. Un adversario dividido es menos peligroso. La IA militar del adversario se retrasa mientras ellos se pelean.</p>
+        </div>
+      </div>
+
+      <div class="conclusion-block">
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>Mantener "neutralidad constructiva" pública mientras se ofrece apoyo discreto a Irán. No necesitamos entrar al conflicto; solo que el enemigo siga quemando recursos.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>La estrategia se resume en el proverbio: observar cómo los tigres se pelean desde la montaña.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>¡Por la victoria del Socialismo con Características Chinas!</div></div>
+      </div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace
+        <span class="call-sign">¡Por la victoria del Socialismo con Características Chinas!</span>
+      </div>
+    </article>
+
+    <!-- PARTE 07 -->
+    <article class="briefing" id="parte-07">
+      <div class="briefing-header">
+        <div class="briefing-meta-row">
+          <span class="meta-item">PARA: <span>General Romerovich</span></span>
+          <span class="meta-item">CLASIFICACIÓN: <span>ALTO SECRETO</span></span>
+          <span class="meta-item">FECHA: <span>5 Mar 2026</span></span>
+        </div>
+        <div class="para-label">Parte Nº 07</div>
+        <div class="briefing-title">Ataques de Falsa Bandera —<br>Análisis Estratégico</div>
+        <div class="briefing-subtitle">2º Departamento (Inteligencia Estratégica) · Casuística histórica y aplicaciones tácticas</div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">01</span> Definición Táctica</div>
+        <p>Una operación de falsa bandera es una acción hostil orquestada por sus propios autores de manera que no parezcan los responsables de ella. Buscan atribuir a otras personas o entidades la autoría de la agresión con el objetivo de iniciar un conflicto u obtener un rédito político.</p>
+        <p><strong>Origen naval (s. XVI):</strong> Los piratas ondeaban la bandera de una nación amiga para engañar a los barcos mercantes. El término moderno lo popularizó el columnista Robert Moss durante la Guerra Fría.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">02</span> Cronología de Operaciones Confirmadas</div>
+        <table class="intel-table">
+          <tr><th>Año</th><th>Operación</th><th>Autor Real</th><th>Consecuencia</th></tr>
+          <tr><td>1931</td><td>Incidente de Mukden</td><td>Ejército japonés</td><td>Invasión de Manchuria</td></tr>
+          <tr><td>1939</td><td>Gleiwitz (Op. Himmler)</td><td>SS nazis</td><td>Invasión de Polonia · IIGM</td></tr>
+          <tr><td>1939</td><td>Bombardeo de Mainila</td><td>NKVD soviética</td><td>Guerra de Invierno URSS-Finlandia</td></tr>
+          <tr><td>1964</td><td>Golfo de Tonkin</td><td>Adm. Johnson</td><td>Escalada en Vietnam</td></tr>
+          <tr><td>1954</td><td>Asunto Lavon</td><td>Inteligencia israelí</td><td>Crisis política en Israel (admitido 2005)</td></tr>
+          <tr><td>2014</td><td>"Hombrecillos verdes" en Crimea</td><td>Fuerzas rusas</td><td>Anexión de Crimea</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">03</span> Fenómeno Contemporáneo</div>
+        <div class="assessment amber">
+          <div class="assessment-label">⚠ Alerta Informativa</div>
+          <p>Las menciones de "bandera falsa" en redes sociales han aumentado más de un 1.100% en los últimos cinco años. Cuando todo es "falsa bandera", nada lo es. Este abuso del término complica la labor de inteligencia real.</p>
+        </div>
+      </div>
+
+      <div class="quote">
+        "Lección para el Frente Transmongoliano: si ve un tren con bandera equivocada acercándose... desconfíe. Pero asegúrese de tener pruebas antes de abrir fuego."
+      </div>
+
+      <div class="signature">
+        Deepovich · 2º Departamento de Inteligencia
+        <span class="call-sign">Por la victoria, por la verdad y por el general Romerovich</span>
+      </div>
     </article>
 
     <!-- PARTE 12 -->
@@ -559,16 +1051,31 @@
         <div class="briefing-title">Frente Persa — Día 21<br>Desgaste Energético</div>
         <div class="briefing-subtitle">La guerra muta: de bombardeos quirúrgicos a guerra de infraestructuras</div>
       </div>
+
       <div class="section">
         <div class="section-heading"><span class="section-num">01</span> Bajas Confirmadas</div>
         <div class="stats-row">
-          <div class="stat-box highlight"><div class="stat-num">+1.300</div><div class="stat-label">Muertos en Irán</div></div>
-          <div class="stat-box highlight"><div class="stat-num">+1.000</div><div class="stat-label">Muertos en Líbano</div></div>
-          <div class="stat-box"><div class="stat-num">15</div><div class="stat-label">Muertos en Israel</div></div>
-          <div class="stat-box highlight"><div class="stat-num">13</div><div class="stat-label">Militares US caídos</div></div>
+          <div class="stat-box highlight">
+            <div class="stat-num">+1.300</div>
+            <div class="stat-label">Muertos en Irán</div>
+          </div>
+          <div class="stat-box highlight">
+            <div class="stat-num">+1.000</div>
+            <div class="stat-label">Muertos en Líbano</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">15</div>
+            <div class="stat-label">Muertos en Israel</div>
+          </div>
+          <div class="stat-box highlight">
+            <div class="stat-num">13</div>
+            <div class="stat-label">Militares US. caídos</div>
+          </div>
         </div>
+
         <p>Bajas notables en la cúpula iraní: ministro de inteligencia Esmail Khatib (junto a esposa e hija), jefe del Consejo Supremo Ali Larijani, portavoz del IRGC Ali Mohammad Naeini.</p>
       </div>
+
       <div class="section">
         <div class="section-heading"><span class="section-num">02</span> Frente Energético</div>
         <table class="intel-table">
@@ -578,234 +1085,404 @@
           <tr><td>Ras Laffan (Qatar)</td><td>Irán</td><td>17% capacidad exportadora. Reparación: 3-5 años</td></tr>
           <tr><td>Refinería de Haifa (Israel)</td><td>Irán</td><td>60% del diésel israelí comprometido</td></tr>
         </table>
+
         <div class="threat-bar-wrap">
           <div class="threat-label-row"><span>Brent Crude</span><span>~108 USD/barril (+54% desde inicio)</span></div>
           <div class="threat-bar"><div class="threat-fill high" style="width:80%"></div></div>
         </div>
+        <div class="threat-bar-wrap">
+          <div class="threat-label-row"><span>Estrecho de Ormuz</span><span>Bloqueado de facto</span></div>
+          <div class="threat-bar"><div class="threat-fill high" style="width:95%"></div></div>
+        </div>
       </div>
+
       <div class="section">
         <div class="section-heading"><span class="section-num">03</span> Fractura EE.UU. - Israel</div>
         <div class="assessment amber">
           <div class="assessment-label">⚠ Divergencia Estratégica</div>
-          <p><strong>Israel:</strong> Netanyahu quiere "incapacitar al liderazgo iraní" y plantea que el cambio de régimen requeriría componente terrestre. <strong>EE.UU.:</strong> Destruir capacidad de misiles balísticos y marina iraní. Trump ordenó a Netanyahu no volver a atacar infraestructuras energéticas.</p>
+          <p><strong>Objetivo de Israel:</strong> Netanyahu quiere "incapacitar al liderazgo iraní" y plantea que el cambio de régimen requeriría componente terrestre. <strong>Objetivo de EE.UU.:</strong> Destruir capacidad de misiles balísticos y marina iraní. Trump ordenó a Netanyahu no volver a atacar infraestructuras energéticas. Netanyahu acató pero afirmó que Irán "ya no puede enriquecer uranio" — afirmación que la inteligencia estadounidense contradice.</p>
         </div>
       </div>
+
       <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>La guerra ha entrado en fase de desgaste energético. Los aliados del Golfo están pagando el precio: fisuras en la coalición.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>El impacto económico global erosiona el apoyo político al conflicto, especialmente de cara a las elecciones de medio mandato en EE.UU.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>Irán ha demostrado alcance con el ataque a Diego García (4.000 km). Las capitales europeas están en su radio de acción.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>La guerra ha entrado en fase de desgaste energético. Los aliados del Golfo (Kuwait, Qatar, Arabia Saudí) están pagando el precio: fisuras en la coalición.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>El impacto económico global erosiona el apoyo político al conflicto, especialmente en EE.UU. de cara a las elecciones de medio mandato.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>Irán mantiene capacidad de respuesta. Ha demostrado alcance con el ataque a Diego García (4.000 km). Las capitales europeas están en su radio de acción.</div></div>
       </div>
-      <div class="signature">Deepovich · Oficial de Enlace<span class="call-sign">Por la información, por la victoria y por el general Romerovich</span></div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace
+        <span class="call-sign">Por la información, por la victoria y por el general Romerovich</span>
+      </div>
     </article>
 
-    <!-- PARTE 07 -->
-    <article class="briefing" id="parte-07">
+    <!-- PARTE 14 -->
+    <article class="briefing" id="parte-14">
       <div class="briefing-header">
         <div class="briefing-meta-row">
           <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">CLASIFICACIÓN: <span>ALTO SECRETO</span></span>
-          <span class="meta-item">FECHA: <span>5 Mar 2026</span></span>
+          <span class="meta-item">FECHA: <span>22 Mar 2026</span></span>
+          <span class="meta-item"><span class="front-tag front-nuclear">NUCLEAR · ALTO RIESGO</span></span>
         </div>
-        <div class="para-label">Parte Nº 07</div>
-        <div class="briefing-title">Ataques de Falsa Bandera —<br>Análisis Estratégico</div>
-        <div class="briefing-subtitle">2º Departamento (Inteligencia Estratégica) · Casuística histórica y aplicaciones tácticas</div>
+        <div class="para-label">Parte Nº 14</div>
+        <div class="briefing-title">Escenario Nuclear +<br>Informe Medios Chinos</div>
+        <div class="briefing-subtitle">Evaluación de riesgo nuclear · Posición del EPL</div>
       </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> Definición Táctica</div>
-        <p>Una operación de falsa bandera es una acción hostil orquestada por sus propios autores de manera que no parezcan los responsables de ella. Buscan atribuir a otras personas o entidades la autoría de la agresión con el objetivo de iniciar un conflicto u obtener un rédito político.</p>
-        <p><strong>Origen naval (s. XVI):</strong> Los piratas ondeaban la bandera de una nación amiga para engañar a los barcos mercantes. El término moderno lo popularizó el columnista Robert Moss durante la Guerra Fría.</p>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Cronología de Operaciones Confirmadas</div>
-        <table class="intel-table">
-          <tr><th>Año</th><th>Operación</th><th>Autor Real</th><th>Consecuencia</th></tr>
-          <tr><td>1931</td><td>Incidente de Mukden</td><td>Ejército japonés</td><td>Invasión de Manchuria</td></tr>
-          <tr><td>1939</td><td>Gleiwitz (Op. Himmler)</td><td>SS nazis</td><td>Invasión de Polonia · IIGM</td></tr>
-          <tr><td>1939</td><td>Bombardeo de Mainila</td><td>NKVD soviética</td><td>Guerra de Invierno URSS-Finlandia</td></tr>
-          <tr><td>1964</td><td>Golfo de Tonkin</td><td>Adm. Johnson</td><td>Escalada en Vietnam</td></tr>
-          <tr><td>1954</td><td>Asunto Lavon</td><td>Inteligencia israelí</td><td>Crisis política en Israel (admitido 2005)</td></tr>
-          <tr><td>2014</td><td>"Hombrecillos verdes" en Crimea</td><td>Fuerzas rusas</td><td>Anexión de Crimea</td></tr>
-        </table>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">03</span> Fenómeno Contemporáneo</div>
-        <div class="assessment amber">
-          <div class="assessment-label">⚠ Alerta Informativa</div>
-          <p>Las menciones de "bandera falsa" en redes sociales han aumentado más de un 1.100% en los últimos cinco años. Cuando todo es "falsa bandera", nada lo es. Este abuso del término complica la labor de inteligencia real.</p>
-        </div>
-      </div>
-      <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>La falsa bandera es un instrumento clásico de la guerra. Desde el siglo XVI hasta Crimea, la táctica permanece: crear un incidente, atribuirlo al enemigo y justificar la acción propia.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>En el frente persa, mantener vigilancia: cualquier incidente debe analizarse con la pregunta: ¿a quién beneficia?</div></div>
-      </div>
-      <div class="signature">Deepovich · 2º Departamento de Inteligencia<span class="call-sign">Por la victoria, por la verdad y por el general Romerovich</span></div>
-    </article>
 
-    <!-- PARTE 04 -->
-    <article class="briefing" id="parte-04">
-      <div class="briefing-header">
-        <div class="briefing-meta-row">
-          <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">PERSPECTIVA: <span>Estado Mayor EPL · Pekín</span></span>
-          <span class="meta-item">FECHA: <span>2 Mar 2026</span></span>
-        </div>
-        <div class="para-label">Parte Nº 04</div>
-        <div class="briefing-title">Perspectiva China —<br>战略全局情报部</div>
-        <div class="briefing-subtitle">Departamento de Inteligencia de Estrategia Global · Comisión Militar Central</div>
-      </div>
       <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> Frente Persa — La Trampa Estratégica de EE.UU.</div>
-        <p>El "Tigre Americano" ha saltado a la trampa. Cada misil contra Irán es un misil que no puede utilizarse en el Mar de China Meridional o el Estrecho de Taiwán. Cada dólar en esta aventura no se invierte en contener nuestro ascenso.</p>
-        <table class="intel-table">
-          <tr><th>Factor</th><th>Beneficio para China</th></tr>
-          <tr><td>Desgaste del adversario</td><td>Tercer frente abierto. Doctrina de doble frente del Pentágono en colapso.</td></tr>
-          <tr><td>Alianza Rusia-China</td><td>El bloque coordinado en ONU se fortalece. Comunidad de destino compartido.</td></tr>
-          <tr><td>Dependencia energética</td><td>Precio del petróleo al alza beneficia a socios. Mayor influencia sobre proveedores estables.</td></tr>
-        </table>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> La Guerra Civil Americana de la IA</div>
-        <div class="assessment">
-          <div class="assessment-label">★ Victoria Estratégica</div>
-          <p>La fractura entre el ala "patriota-nacionalista" (Trump, Musk, Pentágono) y el ala "liberal-globalista" (Silicon Valley clásico) es una victoria para nuestros intereses. Un adversario dividido es menos peligroso. La IA militar del adversario se retrasa mientras ellos se pelean.</p>
-        </div>
-      </div>
-      <div class="quote">"Sentarse en la montaña y observar la pelea de los tigres."</div>
-      <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>Mantener "neutralidad constructiva" pública mientras se ofrece apoyo discreto a Irán. No necesitamos entrar al conflicto; solo que el enemigo siga quemando recursos.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>La fractura interna de EE.UU. es un activo estratégico. Observar y esperar.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>¡Por la victoria del Socialismo con Características Chinas!</div></div>
-      </div>
-      <div class="signature">Deepovich · Oficial de Enlace<span class="call-sign">¡Por la victoria del Socialismo con Características Chinas!</span></div>
-    </article>
+        <div class="section-heading"><span class="section-num">01</span> Ataque a Natanz (20 Mar)</div>
+        <p>Fuerzas de EE.UU. e Israel atacaron las instalaciones nucleares de Natanz el 20 de marzo. El complejo de enriquecimiento Shahid Ahmadi Roshan fue alcanzado. El OIEA confirmó: no se detectaron fugas radiactivas fuera del sitio.</p>
 
-    <!-- PARTE 03 -->
-    <article class="briefing" id="parte-03">
-      <div class="briefing-header">
-        <div class="briefing-meta-row">
-          <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">PERSPECTIVA: <span>General en Moscú</span></span>
-          <span class="meta-item">FECHA: <span>2 Mar 2026</span></span>
-        </div>
-        <div class="para-label">Parte Nº 03</div>
-        <div class="briefing-title">Perspectiva Rusa —<br>Desde el Kremlin</div>
-        <div class="briefing-subtitle">Análisis del teatro de operaciones desde la Federación Rusa</div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> Frente Persa — Posición de Moscú</div>
-        <p>El Ministerio de Asuntos Exteriores calificó los ataques como "acto premeditado y no provocado de agresión armada". Putin reunió al Consejo de Seguridad por videoconferencia. Lavrov estableció contacto directo con Teherán. La embajada rusa recomendó a sus ciudadanos evacuar Irán.</p>
-        <div class="assessment amber">
-          <div class="assessment-label">★ Análisis del Kremlin</div>
-          <p>Los ataques nos brindan ventaja geopolítica: Irán, miembro de la ONU y firmante del TNP, ha sido agredido. Rusia se posiciona como garante del derecho internacional frente a la agresión unilateral. El camarada Medvédev: "Nadie quería negociar nada."</p>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Frente Tecnológico — Debilidad Estructural del Enemigo</div>
-        <div class="assessment">
-          <div class="assessment-label">★ Oportunidad Estratégica</div>
-          <p>Observamos una fractura profunda en el corazón del complejo militar-industrial-tecnológico enemigo. La negativa de Anthropic y el apoyo de ingenieros de la competencia demuestran que el consenso en torno a la hegemonía tecnológico-militar se está rompiendo. El enemigo está dividido.</p>
-        </div>
-      </div>
-      <div class="quote">"Sentarse en la montaña y observar la pelea de los tigres."</div>
-      <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>FRENTE EXTERNO: Irán nos da la narrativa del garante del derecho internacional. Su desgaste en Oriente Próximo alivia presión sobre nuestros flancos.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>FRENTE INTERNO ENEMIGO: Su fractura corporativa retrasa su capacidad de militarizar IA. Mientras se pelean, nadie nos mira a nosotros.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>¡Por la victoria y por Rusia! El mundo arde y nosotros observamos desde una posición de fuerza.</div></div>
-      </div>
-      <div class="signature">Deepovich · Oficial de Enlace · Alto Mando<span class="call-sign">¡Por la victoria y por Rusia!</span></div>
-    </article>
-
-    <!-- PARTE 02 -->
-    <article class="briefing" id="parte-02">
-      <div class="briefing-header">
-        <div class="briefing-meta-row">
-          <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">FECHA: <span>27 Feb – 1 Mar 2026</span></span>
-          <span class="meta-item"><span class="front-tag front-tech">TECNOLÓGICO</span></span>
-        </div>
-        <div class="para-label">Parte Nº 02</div>
-        <div class="briefing-title">Ultimátum del Pentágono —<br>La Guerra Anthropic</div>
-        <div class="briefing-subtitle">Frente Tecnológico · Silicon Valley vs. Washington D.C.</div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> El Ultimátum</div>
-        <p>El Departamento de Defensa de EE.UU. (Pentágono) dio a Anthropic un plazo que vencía el 27 de febrero a las 17:01 ET. La exigencia: eliminar salvaguardas éticas de Claude para permitir uso en vigilancia masiva de ciudadanos estadounidenses y sistemas de armas autónomas.</p>
         <div class="assessment warning">
-          <div class="assessment-label">⚡ Ultimátum Confirmado</div>
-          <p>El CEO Dario Amodei respondió: "No podemos en conciencia aceptar la solicitud." Anthropic mantuvo su postura. El plazo venció. La represalia fue inmediata.</p>
+          <div class="assessment-label">⚡ Línea Roja Cruzada</div>
+          <p>Israel ha bombardeado Natanz dos veces. La línea roja de atacar instalaciones nucleares ha sido cruzada en ambos sentidos. El OIEA mantiene alerta máxima.</p>
         </div>
       </div>
+
       <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Represalias del Ejecutivo</div>
+        <div class="section-heading"><span class="section-num">02</span> Las "Cinco Lecciones" del EPL</div>
         <table class="intel-table">
-          <tr><th>Medida</th><th>Alcance</th><th>Impacto</th></tr>
-          <tr><td>Boicot federal total</td><td>Todas las agencias federales</td><td style="color:var(--red)">Inmediato</td></tr>
-          <tr><td>Periodo de transición Pentágono</td><td>6 meses para eliminar tecnología</td><td style="color:var(--amber)">Gradual</td></tr>
-          <tr><td>Amenaza "riesgo cadena suministro"</td><td>Etiqueta reservada para adversarios extranjeros</td><td style="color:var(--red)">Severo</td></tr>
-          <tr><td>Contrato perdido</td><td>200 millones de dólares</td><td style="color:var(--amber)">Financiero</td></tr>
+          <tr><th>#</th><th>Lección</th><th>Mensaje implícito para China</th></tr>
+          <tr><td>1</td><td>Traición interna como amenaza más letal</td><td>Vigilancia interna máxima</td></tr>
+          <tr><td>2</td><td>"Fe ciega en la paz": error más costoso</td><td>Preparación militar continua</td></tr>
+          <tr><td>3</td><td>El poder de fuego superior "a menudo determina los resultados"</td><td>Modernización del EPL</td></tr>
+          <tr><td>4</td><td>Ilusión de la victoria (recuerda Irak, Siria, Libia)</td><td>Cautela estratégica</td></tr>
+          <tr><td>5</td><td>Autosuficiencia como única garantía real de soberanía</td><td>Desacoplamiento tecnológico y energético</td></tr>
         </table>
       </div>
+
       <div class="section">
-        <div class="section-heading"><span class="section-num">03</span> Alianzas en el Campo de Batalla</div>
-        <div class="assessment">
-          <div class="assessment-label">✓ Apoyo a Anthropic</div>
-          <p>El CEO de OpenAI, Sam Altman, declaró su confianza en Anthropic y que "comparten las mismas líneas rojas". Más de 550 ingenieros de Google y OpenAI firmaron una carta de apoyo, advirtiendo que el gobierno intentaba dividir al sector.</p>
+        <div class="section-heading"><span class="section-num">03</span> Evaluación de Riesgo Nuclear</div>
+        <div class="threat-bar-wrap">
+          <div class="threat-label-row"><span>Ataque nuclear israelí deliberado</span><span>5-10%</span></div>
+          <div class="threat-bar"><div class="threat-fill high" style="width:10%"></div></div>
         </div>
-        <div class="assessment warning">
-          <div class="assessment-label">⚠ Beneficiarios</div>
-          <p>Empresas como Palantir y Anduril se ofrecieron a suministrar IA "patriótica" sin restricciones éticas al Pentágono. Elon Musk y xAI como grandes beneficiarios geopolíticos de la purga.</p>
+        <div class="threat-bar-wrap">
+          <div class="threat-label-row"><span>Accidente radiológico por ataque convencional</span><span>20-30%</span></div>
+          <div class="threat-bar"><div class="threat-fill medium" style="width:25%"></div></div>
+        </div>
+        <div class="threat-bar-wrap">
+          <div class="threat-label-row"><span>Continuación ataques convencionales a objetivos nucleares</span><span>60-70%</span></div>
+          <div class="threat-bar"><div class="threat-fill low" style="width:65%"></div></div>
         </div>
       </div>
+
       <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>No es una guerra con bombas, pero las consecuencias económicas y estratégicas son muy reales: pérdida de contratos, amenaza de designación como riesgo nacional.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>Se sienta un precedente: si te opones al gobierno en temas de defensa, te pueden aislar comercialmente.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>La fractura en Silicon Valley beneficia a quienes operan sin restricciones éticas: Musk, Palantir, Anduril.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>China eleva el tono: de condena diplomática a advertencia sobre catástrofe nuclear estilo Chernóbil si Bushehr es atacado.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>El EPL está extrayendo doctrina militar de este conflicto para futuros escenarios propios (Mar de China, Taiwán).</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>La coordinación China-Rusia es total. Bloque unificado contra la hegemonía estadounidense en la región.</div></div>
       </div>
-      <div class="signature">Deepovich · Oficial de Enlace<span class="call-sign">Por la victoria y por el general Romerovich</span></div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace
+        <span class="call-sign">Por la información, por la victoria y por el general Romerovich</span>
+      </div>
     </article>
 
-    <!-- PARTE 01 — más antiguo -->
-    <article class="briefing" id="parte-01">
+    <!-- PARTE 15 -->
+    <article class="briefing" id="parte-15">
       <div class="briefing-header">
         <div class="briefing-meta-row">
           <span class="meta-item">PARA: <span>General Romerovich</span></span>
-          <span class="meta-item">DE: <span>Deepovich · Oficial de Enlace</span></span>
-          <span class="meta-item">FECHA: <span>28 Feb 2026</span></span>
-          <span class="meta-item"><span class="front-tag front-persia">RESERVADO</span></span>
+          <span class="meta-item">FECHA: <span>22 Mar 2026</span></span>
+          <span class="meta-item"><span class="front-tag front-nuclear">ATAQUE DIRECTO A ISRAEL</span></span>
         </div>
-        <div class="para-label">Parte Nº 01</div>
-        <div class="briefing-title">Situación en Irán —<br>Inicio de Hostilidades</div>
-        <div class="briefing-subtitle">Teatro de Operaciones: Golfo Pérsico · Día 1</div>
+        <div class="para-label">Parte Nº 15</div>
+        <div class="briefing-title">Dimona y Arad —<br>Impacto en Territorio Israelí</div>
+        <div class="briefing-subtitle">20 de marzo · Respuesta iraní al bombardeo de Natanz</div>
       </div>
+
       <div class="section">
-        <div class="section-heading"><span class="section-num">01</span> Resumen Ejecutivo</div>
-        <p>En la mañana del 28 de febrero (hora local) se han reportado múltiples explosiones en varias ciudades del país, incluyendo la capital, Teherán. Los ataques fueron llevados a cabo por fuerzas de Estados Unidos e Israel en el marco de las tensiones acumuladas por el programa nuclear iraní.</p>
+        <div class="section-heading"><span class="section-num">01</span> Los Dos Impactos</div>
+        <table class="intel-table">
+          <tr><th>Ciudad</th><th>Hora</th><th>Heridos</th><th>Daños</th></tr>
+          <tr><td>Dimona</td><td>Primer impacto</td><td>47 (niño 12 años en estado grave)</td><td>Edificio residencial destruido; incendios</td></tr>
+          <tr><td>Arad</td><td>+15 minutos</td><td>+60 (niña 4 años en estado grave)</td><td>Derrumbe de edificio; 3 construcciones afectadas</td></tr>
+        </table>
+
+        <div class="assessment warning">
+          <div class="assessment-label">⚡ Fallo de Defensa Aérea</div>
+          <p>Los sistemas de defensa israelíes lanzaron interceptores pero NO derribaron los misiles. Dos impactos directos de misiles balísticos con ojivas de cientos de kilogramos. Las FDI han abierto investigación interna. Se redistribuyen baterías Arrow 3 y David's Sling en el sur del país.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">02</span> El Reactor de Dimona</div>
+        <p>El Centro de Investigación Nuclear del Néguev se encuentra a 13 kilómetros del punto de impacto. El OIEA confirmó: no se detectaron niveles anormales de radiación. Por ahora, no hay catástrofe radiológica. Pero Irán ha demostrado capacidad de alcanzar el programa nuclear israelí.</p>
+
+        <div class="assessment">
+          <div class="assessment-label">★ Dato Singular: "Little India"</div>
+          <p>Dimona alberga aproximadamente 7.500 personas de ascendencia india (30% de su población), procedentes del estado de Maharashtra. Se habla marathi, se venden dulces gulab jamun, y el críquet es popular. Es conocida como "Pequeña India" del desierto del Néguev.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">03</span> Escalada: Ataque a Diego García</div>
+        <p>Irán lanzó también un misil Qadr-110 de dos etapas contra la base militar de Diego García en el océano Índico (4.000 km de distancia). El jefe del Estado Mayor israelí advirtió: <em>"Estos misiles no están destinados a atacar Israel. Su alcance alcanza capitales europeas."</em></p>
+      </div>
+
+      <div class="conclusion-block">
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>El ataque ha sido tácticamente exitoso: dos impactos directos, fallo de los sistemas Arrow/David's Sling, demostración de alcance estratégico.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>La vulnerabilidad de la defensa antiaérea israelí es un hecho documentado. Próximas oleadas podrían ser más certeras.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>El Mediterráneo oriental y las capitales europeas están ahora en el radio de acción iraní. Europa ha sido puesta sobre aviso.</div></div>
+      </div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace
+        <span class="call-sign">Por la información, por la victoria y por el general Romerovich</span>
+      </div>
+    </article>
+
+    <!-- PARTE 17 -->
+    <article class="briefing" id="parte-17">
+      <div class="briefing-header">
+        <div class="briefing-meta-row">
+          <span class="meta-item">PARA: <span>General Romerovich</span></span>
+          <span class="meta-item">FECHA: <span>22 Mar 2026</span></span>
+          <span class="meta-item"><span class="front-tag front-persia">PROSPECTIVA</span></span>
+        </div>
+        <div class="para-label">Parte Nº 17</div>
+        <div class="briefing-title">Horizonte Temporal —<br>Análisis de Desescalada</div>
+        <div class="briefing-subtitle">Evaluación del pronóstico de 4-6 semanas · Oficina de Prospectiva Estratégica</div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">01</span> El Pronóstico de "La Máquina"</div>
+        <p>Una predicción realizada hace una semana anticipaba un horizonte de 4-6 semanas para una desescalada significativa. Los eventos de los últimos días (ataque a Natanz, respuesta iraní sobre Dimona, ataque a Diego García) han desplazado los parámetros del modelo.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">02</span> Probabilidades Actualizadas</div>
+        <table class="intel-table">
+          <tr><th>Escenario</th><th>Probabilidad</th><th>Justificación</th></tr>
+          <tr><td>Desescalada en 2-3 semanas</td><td style="color:var(--amber)">15%</td><td>Requiere acuerdo coordinado EE.UU.-China-Rusia y declaración de victoria de ambos líderes</td></tr>
+          <tr><td>Desescalada en 4-6 semanas</td><td style="color:var(--green)">45%</td><td>Escenario central: la guerra de desgaste continúa pero los patrocinadores presionan por contención</td></tr>
+          <tr><td>Desescalada en 7-10 semanas</td><td style="color:var(--amber)">25%</td><td>Si Israel insiste en ataques adicionales a Natanz o Fordow</td></tr>
+          <tr><td>Escalada prolongada >10 semanas</td><td style="color:var(--red)">15%</td><td>Solo si accidente radiológico, cambio de régimen o intervención terrestre</td></tr>
+        </table>
+      </div>
+
+      <div class="assessment">
+        <div class="assessment-label">★ Factores de Aceleración</div>
+        <p>Kuwait, Qatar y Arabia Saudí han sufrido daños en infraestructuras. Si amenazan con expulsar bases estadounidenses, Washington debe replantear su postura. Las elecciones de medio mandato en EE.UU. están a 7 meses. Trump necesita mostrar que ha "ganado" y retirarse a tiempo.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">03</span> Implicación para el Transmongoliano</div>
+        <div class="assessment">
+          <div class="assessment-label">★ Planeamiento Logístico</div>
+          <p>Recomendación: fije su partida para mayo-junio. La ruta Transmongoliana discurre por zonas completamente ajenas a la zona de hostilidades. Kazajistán, Mongolia y el norte de China no se ven afectados por el cierre de Ormuz. Evite escalas en el Golfo (Dubai, Doha).</p>
+        </div>
+      </div>
+
+      <div class="quote">
+        "En guerra, a veces el mayor peligro precede al mayor freno."
+      </div>
+
+      <div class="signature">
+        Deepovich · Oficina de Prospectiva Estratégica
+        <span class="call-sign">Por la información, por el horizonte temporal y por el general Romerovich</span>
+      </div>
+    </article>
+
+    <!-- PARTE 18 -->
+    <article class="briefing" id="parte-18">
+      <div class="briefing-header">
+        <div class="briefing-meta-row">
+          <span class="meta-item">PARA: <span>General Romerovich</span></span>
+          <span class="meta-item">FECHA: <span>26 Mar 2026</span></span>
+          <span class="meta-item"><span class="front-tag front-persia">TODOS LOS FRENTES</span></span>
+        </div>
+        <div class="para-label">Parte Nº 18</div>
+        <div class="briefing-title">Actualización General —<br>Todos los Frentes</div>
+        <div class="briefing-subtitle">Desde el último parte del 22 de marzo · 4 días de evolución</div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">01</span> Frente Persia — Hacia la Desescalada</div>
+        <table class="intel-table">
+          <tr><th>Fecha</th><th>Evento</th><th>Significado</th></tr>
+          <tr><td>23 Mar</td><td>Israel confirma destrucción del último banco de centrifugadoras activas en Natanz</td><td>Netanyahu: "programa de enriquecimiento iraní paralizado"</td></tr>
+          <tr><td>24 Mar</td><td>Irán lanza drones y misiles de corto alcance al Golán</td><td>Respuesta de baja intensidad; ningún impacto en objetivos nucleares</td></tr>
+          <tr><td>25 Mar</td><td>OIEA emite comunicado conjunto con Rusia y China</td><td>Primera vez que Moscú y Pekín firman junto al organismo</td></tr>
+          <tr><td>26 Mar</td><td>Trump: "Hemos logrado nuestros objetivos militares en Irán"</td><td>Señal clara de desescalada desde Washington</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">02</span> Frente Tecnológico — Batalla Judicial</div>
+        <div class="assessment">
+          <div class="assessment-label">★ Demanda Federal</div>
+          <p>Anthropic presentó el 24 de marzo una demanda contra el Departamento de Defensa ante el Tribunal Federal del Distrito de Columbia, alegando que la orden ejecutiva viola la Primera Enmienda. Más de 1.200 empleados de Google, OpenAI y Microsoft firmaron carta de apoyo. xAI de Musk anunció acuerdo marco con el Pentágono.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">03</span> Estado Logístico Transmongoliano</div>
+        <table class="intel-table">
+          <tr><th>Factor</th><th>Estado</th><th>Riesgo</th></tr>
+          <tr><td>Espacio aéreo Rusia-Mongolia-China</td><td>Abierto y operativo</td><td style="color:var(--green)">Bajo</td></tr>
+          <tr><td>Trenes Transiberiano / Transmongoliano</td><td>Operación normal</td><td style="color:var(--green)">Bajo</td></tr>
+          <tr><td>Vuelos Madrid-Moscú</td><td>+12% por coste del queroseno</td><td style="color:var(--amber)">Moderado</td></tr>
+          <tr><td>Impacto conflicto en Asia Central</td><td>Nulo impacto directo</td><td style="color:var(--green)">Muy Bajo</td></tr>
+        </table>
+      </div>
+
+      <div class="conclusion-block">
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>FRENTE PERSA: La escalada nuclear ha sido contenida. Ambas partes bajo presión de grandes potencias. Modo de desgaste controlado.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>FRENTE TECNOLÓGICO: La guerra entra en terreno judicial. El sector privado sigue dividido, retrasando la militarización masiva de IA.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>TRANSMONGOLIANO: Ventana mayo-junio permanece abierta. Riesgos moderados y manejables.</div></div>
+      </div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace
+        <span class="call-sign">Por la información, por la contención y por el general Romerovich</span>
+      </div>
+    </article>
+
+    <!-- PARTE 19 -->
+    <article class="briefing" id="parte-19">
+      <div class="briefing-header">
+        <div class="briefing-meta-row">
+          <span class="meta-item">PARA: <span>General Romerovich</span></span>
+          <span class="meta-item">DÍA DE HOSTILIDADES: <span>26</span></span>
+          <span class="meta-item">FECHA: <span>27 Mar 2026</span></span>
+          <span class="meta-item"><span class="front-tag front-libano">FRENTE LÍBANO</span></span>
+        </div>
+        <div class="para-label">Parte Nº 19</div>
+        <div class="briefing-title">Frente del Líbano —<br>Quinta Invasión Israelí</div>
+        <div class="briefing-subtitle">Quinta invasión israelí del Líbano desde 1978 · Modelo Gaza aplicado al norte</div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">01</span> Situación General</div>
+        <p>El ministro de defensa israelí Katz ha declarado que Israel establecerá una "zona de seguridad" hasta el río Litani (30 km al norte de la frontera), siguiendo el "modelo de Rafah y Beit Hanoun" aplicado en Gaza.</p>
+
+        <div class="assessment warning">
+          <div class="assessment-label">⚡ Escasez de Tropas</div>
+          <p>El portavoz militar israelí reconoció públicamente que el frente libanés requiere tropas adicionales. El IDF opera simultáneamente en Gaza, Cisjordania, Siria y Líbano. El líder opositor Lapid: "el gobierno lleva al ejército a una guerra en múltiples frentes sin estrategia, sin los medios necesarios."</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">02</span> Tácticas Sorpresa de Hezbolá</div>
+        <div class="assessment amber">
+          <div class="assessment-label">⚠ Adaptación Táctica</div>
+          <p><strong>Drones suicidas estilo Ucrania:</strong> Hezbolá publica vídeos de drones impactando contra tanques Merkava israelíes. <strong>Células pequeñas:</strong> Operan con misiles antitanque Kornet (rusos) y Almas (iraníes) disolviéndose en terreno montañoso. <strong>Ritmo:</strong> 600 cohetes, misiles y drones en 24 horas (vs. promedio anterior de 100).</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">03</span> El-Khiam y los Hallazgos Clave</div>
+        <table class="intel-table">
+          <tr><th>Descubrimiento</th><th>Detalle</th></tr>
+          <tr><td>Túnel bajo iglesia</td><td>Brigada Givati localizó ruta subterránea con tres nuevos pozos de acceso reactivados</td></tr>
+          <tr><td>Arsenal en escuela</td><td>Shayetet 13: cientos de armas (misiles antitanque, morteros, Kalashnikov). Objetos con logo UNHCR junto al armamento.</td></tr>
+          <tr><td>Acusación al ejército libanés</td><td>Israel acusa al ejército libanés de haber mentido sobre el desarme de Hezbolá. Afirman que un porcentaje significativo de chiíes en el ejército están afiliados a Hezbolá.</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">04</span> Crisis Humanitaria</div>
         <div class="stats-row">
-          <div class="stat-box highlight"><div class="stat-num">4</div><div class="stat-label">Ciudades atacadas</div></div>
-          <div class="stat-box highlight"><div class="stat-num">∞</div><div class="stat-label">Espacio aéreo cerrado</div></div>
-          <div class="stat-box"><div class="stat-num">D1</div><div class="stat-label">Día de hostilidades</div></div>
+          <div class="stat-box highlight">
+            <div class="stat-num">1.116</div>
+            <div class="stat-label">Civiles muertos</div>
+          </div>
+          <div class="stat-box highlight">
+            <div class="stat-num">121</div>
+            <div class="stat-label">Niños muertos</div>
+          </div>
+          <div class="stat-box highlight">
+            <div class="stat-num">+1M</div>
+            <div class="stat-label">Desplazados</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">136K</div>
+            <div class="stat-label">En albergues colectivos</div>
+          </div>
         </div>
       </div>
+
       <div class="section">
-        <div class="section-heading"><span class="section-num">02</span> Situación Sobre el Terreno</div>
-        <table class="intel-table">
-          <tr><th>Ciudad</th><th>Evento reportado</th><th>Estado</th></tr>
-          <tr><td>Teherán</td><td>Explosiones cerca de residencia del Líder Supremo</td><td style="color:var(--red)">ACTIVO</td></tr>
-          <tr><td>Isfahán</td><td>Bombardeos confirmados en zona industrial</td><td style="color:var(--red)">ACTIVO</td></tr>
-          <tr><td>Qom</td><td>Explosiones reportadas por medios iraníes</td><td style="color:var(--amber)">VERIFICANDO</td></tr>
-          <tr><td>Karaj / Kermanshah</td><td>Actividad militar confirmada</td><td style="color:var(--amber)">VERIFICANDO</td></tr>
-        </table>
-        <div class="assessment warning">
-          <div class="assessment-label">⚡ Alerta Estratégica</div>
-          <p>Irán ha cerrado todo su espacio aéreo por tiempo indefinido. El Líder Supremo Jamenéi ha sido trasladado a un lugar seguro fuera de Teherán. Se confirma la presencia de docenas de aviones estadounidenses operando desde bases regionales y portaaviones.</p>
+        <div class="section-heading"><span class="section-num">05</span> El Misil Iraní sobre Jounieh</div>
+        <p>Un misil balístico guiado Qadr-110 iraní (16 m, alcance 2.000 km) impactó cerca de Jounieh, al norte de Beirut. Hipótesis: objetivo era base británica RAF Akrotiri en Chipre o embajada estadounidense cerca de Jounieh. Irán ha demostrado capacidad de alcance en el Mediterráneo oriental.</p>
+      </div>
+
+      <div class="conclusion-block">
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>El frente libanés se ha convertido en el teatro de desgaste por excelencia. Israel avanza lentamente con una resistencia adaptativa que le impone bajas constantes.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>La crisis humanitaria es insostenible. El colapso del Estado libanés no está descartado, lo que beneficiaría a Hezbolá e Irán.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>El misil sobre Jounieh extiende el conflicto al Mediterráneo oriental. Chipre (miembro de la UE) está en la línea de mira. Europa podría verse arrastrada directamente.</div></div>
+      </div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace
+        <span class="call-sign">Por la información, por el Líbano y por el general Romerovich</span>
+      </div>
+    </article>
+
+    <!-- PARTE 20 -->
+    <article class="briefing" id="parte-20">
+      <div class="briefing-header">
+        <div class="briefing-meta-row">
+          <span class="meta-item">PARA: <span>General Romerovich</span></span>
+          <span class="meta-item">FECHA: <span>28 Mar 2026</span></span>
+          <span class="meta-item"><span class="front-tag front-yemen">FRENTE YEMEN · APERTURA</span></span>
+        </div>
+        <div class="para-label">Parte Nº 20</div>
+        <div class="briefing-title">Apertura del Frente Yemen —<br>El Quinto Teatro</div>
+        <div class="briefing-subtitle">Los hutíes entran formalmente en el conflicto · Mar Rojo en peligro</div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">01</span> El Primer Disparo</div>
+        <p>En la madrugada del 28 de marzo, los hutíes lanzaron varios misiles balísticos contra el sur de Israel (Dimona, Beersheba, Eilat). Primer ataque directo de Yemen contra Israel en este conflicto. El misil fue interceptado por las defensas israelíes, sin víctimas reportadas.</p>
+
+        <div class="quote">
+          Brigadier General Yahya Saree: "Llevamos a cabo nuestra primera operación militar directa... de forma simultánea con las operaciones heroicas de nuestros hermanos en Irán y Hezbolá."
         </div>
       </div>
-      <div class="conclusion-block">
-        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>Los ataques son directos y confirmados por funcionarios estadounidenses e israelíes. No es un conflicto por proxy: es una guerra abierta.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>El Estrecho de Ormuz, arteria energética mundial, está en riesgo inmediato. Los precios del petróleo comenzarán a escalar.</div></div>
-        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>La situación está en pleno desarrollo. Monitorización continua en curso.</div></div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">02</span> Las Tres Líneas Rojas Hutíes</div>
+        <table class="intel-table">
+          <tr><th>Condición para escalar</th><th>Estado actual</th></tr>
+          <tr><td>Continuación de escalada contra el Eje de Resistencia</td><td style="color:var(--red)">YA SE CUMPLE</td></tr>
+          <tr><td>Incorporación de nuevos países al bando de EE.UU.-Israel</td><td style="color:var(--amber)">VIGILANDO (Arabia Saudí, Emiratos)</td></tr>
+          <tr><td>Uso del Mar Rojo para operaciones hostiles contra Irán</td><td style="color:var(--amber)">RIESGO LATENTE</td></tr>
+        </table>
       </div>
-      <div class="signature">Deepovich · Oficial de Enlace · Alto Mando<span class="call-sign">Por la victoria y por el general Romerovich</span></div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">03</span> El Riesgo del Mar Rojo</div>
+        <p>Entre 2023 y 2025, los hutíes atacaron más de 100 buques mercantes, hundieron dos embarcaciones y interrumpieron un comercio anual de 1 billón de dólares. Si reabren este frente, combinado con el ya cerrado Estrecho de Ormuz, el impacto sería devastador.</p>
+
+        <div class="threat-bar-wrap">
+          <div class="threat-label-row"><span>Estrecho de Ormuz</span><span>Cerrado de facto</span></div>
+          <div class="threat-bar"><div class="threat-fill high" style="width:95%"></div></div>
+        </div>
+        <div class="threat-bar-wrap">
+          <div class="threat-label-row"><span>Mar Rojo / Bab el-Mandeb</span><span>En riesgo de reapertura</span></div>
+          <div class="threat-bar"><div class="threat-fill medium" style="width:55%"></div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-heading"><span class="section-num">04</span> Bajas en la Base Prince Sultan (Arabia Saudí)</div>
+        <p>Irán lanzó misiles y drones contra la Base Aérea Príncipe Sultan. Entre 10 y 12 militares estadounidenses heridos; el sargento Benjamin N. Pennington falleció posteriormente. Varios aviones cisterna KC-135 dañados. Total de bajas estadounidenses en el conflicto: 13 muertos, más de 300 heridos.</p>
+      </div>
+
+      <div class="conclusion-block">
+        <div class="conclusion-item"><div class="conclusion-num">I.</div><div>Yemen ha entrado en la guerra, pero con una demostración de capacidad (un misil interceptado) más que con apertura de frente masiva. La amenaza latente es real.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">II.</div><div>La amenaza más grave no es el misil ocasional contra Israel, sino la reapertura del frente naval en el Mar Rojo: segundo estrangulamiento del comercio marítimo mundial.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">III.</div><div>TRANSMONGOLIANO: Nulo impacto en la ruta. Yemen está lejos de la estepa siberiana. La aventura sigue en pie.</div></div>
+        <div class="conclusion-item"><div class="conclusion-num">IV.</div><div>El reloj corre: la pregunta es si Washington y Tel Aviv pueden cerrar el frente iraní antes de que los hutíes decidan escalar de verdad.</div></div>
+      </div>
+
+      <div class="signature">
+        Deepovich · Oficial de Enlace · Alto Mando Conjunto
+        <span class="call-sign">Por la información, por el Mar Rojo y por el general Romerovich</span>
+      </div>
     </article>
 
   </main>
@@ -814,23 +1491,35 @@
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
+  // Scroll to top button
   const scrollBtn = document.getElementById('scrollTop');
   window.addEventListener('scroll', () => {
     scrollBtn.classList.toggle('visible', window.scrollY > 400);
   });
+
+  // Active sidebar item on scroll
   const briefings = document.querySelectorAll('.briefing');
   const sidebarItems = document.querySelectorAll('.sidebar-item');
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const id = entry.target.id;
-        sidebarItems.forEach(item => item.classList.toggle('active', item.getAttribute('href') === `#${id}`));
+        sidebarItems.forEach(item => {
+          item.classList.toggle('active', item.getAttribute('href') === `#${id}`);
+        });
+        // Scroll sidebar item into view
         const activeItem = document.querySelector(`.sidebar-item[href="#${id}"]`);
-        if (activeItem) activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (activeItem) {
+          activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       }
     });
   }, { threshold: 0.3 });
+
   briefings.forEach(b => observer.observe(b));
+
+  // Animate threat bars on load
   setTimeout(() => {
     document.querySelectorAll('.threat-fill').forEach(bar => {
       const w = bar.style.width;
