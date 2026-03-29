@@ -809,11 +809,132 @@ p {
 .scroll-top.visible { opacity: 1; }
 .scroll-top:hover { background: var(--paper); }
 
-@media (max-width: 640px) {
-  .doc { padding: 32px 32px 32px 56px; }
-  .cover, .index-page { padding: 40px 32px; }
-  .prob-label { flex: 0 0 140px; font-size: 10px; }
+/* ───── RESPONSIVE ───── */
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  body { padding: 20px 12px; }
+
+  .cover, .index-page {
+    padding: 40px 44px 40px 56px;
+    margin-bottom: 40px;
+  }
+
+  .cover-title { font-size: 24px; }
+  .cover-stamp-diag { font-size: 36px; border-width: 4px; }
+
+  .doc-wrapper { margin-bottom: 40px; }
+
+  /* flatten paper-stack pseudo-elements on small screens */
+  .doc-wrapper::before { display: none; }
+  .doc-wrapper::after  { display: none; }
+
+  .doc { padding: 36px 32px 36px 60px; }
+
+  .doc-header-top { flex-direction: column; gap: 12px; }
+  .doc-stamps { flex-direction: row; align-items: flex-start; }
+
+  .doc-title { font-size: 18px; }
+
+  .doc-from-to { font-size: 10px; line-height: 1.7; }
+
+  .prob-label { flex: 0 0 160px; font-size: 10px; }
+
   .doc-stats { flex-wrap: wrap; }
+  .doc-stat { flex: 1 1 calc(50% - 1px); border-bottom: 1px solid var(--margin); }
+  .doc-stat:nth-child(even) { border-right: none; }
+
+  .doc-signature { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .sig-block { text-align: left; }
+  .sig-por { max-width: 100%; }
+
+  .index-row { grid-template-columns: 72px 1fr; gap: 0 8px; font-size: 11px; }
+  .index-date { display: none; }
+
+  .cover-meta { grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 11px; }
+
+  .rubber-stamp { font-size: 9px; padding: 3px 7px; }
+
+  .page-num { right: 20px; bottom: 14px; font-size: 9px; }
+}
+
+/* Mobile (≤480px) */
+@media (max-width: 480px) {
+  body { padding: 12px 6px; }
+
+  .cover, .index-page {
+    padding: 28px 20px 28px 36px;
+    margin-bottom: 28px;
+  }
+
+  /* hide hole punches on cover at this size */
+  .hole-punch { width: 12px; height: 12px; left: 14px; }
+
+  .cover-title { font-size: 20px; letter-spacing: 2px; }
+  .cover-stamp-top { font-size: 9px; top: 12px; right: 14px; padding: 2px 6px; }
+  .cover-stamp-diag { display: none; }
+  .cover-ministry, .cover-org { font-size: 9px; letter-spacing: 1px; }
+  .cover-doc-type { font-size: 11px; letter-spacing: 2px; }
+  .cover-subtitle { font-size: 10px; }
+  .cover-meta { font-size: 10px; }
+  .cover-footer { font-size: 9px; }
+
+  .doc { padding: 24px 16px 32px 42px; }
+
+  /* left margin line repositioned */
+  .doc::before { left: 34px; }
+
+  .doc-holes { left: 10px; }
+  .doc-hole  { width: 10px; height: 10px; }
+
+  .doc-parte-num { font-size: 9px; }
+  .doc-title { font-size: 15px; letter-spacing: 1px; }
+  .doc-subtitle { font-size: 10px; }
+  .doc-from-to { font-size: 9px; }
+
+  .doc-section-title { font-size: 11px; }
+
+  p { font-size: 12px; line-height: 1.75; }
+
+  .doc-table { font-size: 10px; }
+  .doc-table th { font-size: 9px; padding: 5px 7px; }
+  .doc-table td { padding: 5px 7px; }
+
+  .notice { font-size: 11px; padding: 10px 12px; }
+  .notice::before { font-size: 8px; }
+
+  .doc-quote { margin: 10px 10px; font-size: 11px; }
+
+  .prob-row { flex-wrap: wrap; gap: 4px; }
+  .prob-label { flex: 0 0 100%; font-size: 10px; margin-bottom: 2px; }
+  .prob-track { flex: 1; }
+  .prob-val   { flex: 0 0 36px; }
+
+  .doc-stats { flex-direction: column; }
+  .doc-stat  { flex: none; width: 100%; border-right: none; border-bottom: 1px solid var(--margin); }
+  .doc-stat:last-child { border-bottom: none; }
+  .doc-stat-num { font-size: 20px; }
+
+  .rubber-stamp { font-size: 8px; padding: 2px 5px; letter-spacing: 2px; }
+
+  .conclusions-title { font-size: 10px; }
+  .conclusion-item { font-size: 11px; }
+
+  .sig-name { font-size: 14px; }
+  .sig-title { font-size: 9px; }
+  .sig-por { font-size: 11px; }
+
+  .index-row { grid-template-columns: 64px 1fr; font-size: 10px; }
+  .index-stamp { display: none; }
+  .index-title { font-size: 14px; letter-spacing: 2px; }
+
+  .page-num { font-size: 8px; right: 12px; bottom: 10px; }
+
+  .scroll-top { width: 36px; height: 36px; font-size: 14px; bottom: 14px; right: 14px; }
+
+  /* stain effects too large on mobile */
+  .stain-1 { width: 40px; height: 32px; }
+  .stain-2 { width: 20px; height: 18px; }
 }
 </style>
 </head>
