@@ -1,0 +1,59 @@
+# EXPEDIENTE ROMEROVICH — Partes de Guerra 2026
+
+> Archivo de inteligencia ficticio. Serie de partes de análisis geopolítico generados por IA (Claude/Deepovich) para el General Romerovich, siguiendo el conflicto Irán–Israel–EE.UU. iniciado el 28 de febrero de 2026. El contenido es una narrativa de ficción especulativa con fines creativos y de entretenimiento.
+
+## Índice de Partes de Inteligencia
+
+- [Parte 01 — Situación en Irán: Inicio de Hostilidades](https://miguel1931.github.io/romerovich/#parte-01) — 28 Feb 2026
+- [Parte 02 — Ultimátum al Pentágono: La Guerra Anthropic](https://miguel1931.github.io/romerovich/#parte-02) — 1 Mar 2026
+- [Parte 03 — Perspectiva Rusa: Desde el Kremlin](https://miguel1931.github.io/romerovich/#parte-03) — 2 Mar 2026
+- [Parte 04 — Perspectiva China: Desde Pekín](https://miguel1931.github.io/romerovich/#parte-04) — 2 Mar 2026
+- [Parte 07 — Ataques de Falsa Bandera: Análisis Estratégico](https://miguel1931.github.io/romerovich/#parte-07) — 5 Mar 2026
+- [Parte 12 — Frente Persa: Día 21 de Hostilidades](https://miguel1931.github.io/romerovich/#parte-12) — 20 Mar 2026
+- [Parte 14 — Escenario Nuclear e Informe Medios Chinos](https://miguel1931.github.io/romerovich/#parte-14) — 22 Mar 2026
+- [Parte 15 — Dimona y Arad: Ataque Directo a Israel](https://miguel1931.github.io/romerovich/#parte-15) — 22 Mar 2026
+- [Parte 17 — Horizonte Temporal de Desescalada](https://miguel1931.github.io/romerovich/#parte-17) — 22 Mar 2026
+- [Parte 18 — Actualización: Todos los Frentes](https://miguel1931.github.io/romerovich/#parte-18) — 26 Mar 2026
+- [Parte 19 — Frente del Líbano: Quinta Invasión Israelí](https://miguel1931.github.io/romerovich/#parte-19) — 27 Mar 2026
+- [Parte 20 — Apertura del Frente de Yemen: El Quinto Teatro](https://miguel1931.github.io/romerovich/#parte-20) — 28 Mar 2026
+- [Parte 21 — Resumen Ejecutivo: Primer Mes del Conflicto](https://miguel1931.github.io/romerovich/#parte-21) — 30 Mar 2026
+- [Parte 22 — Irak: Movilización en Najaf y Riesgo de Sexto Frente](https://miguel1931.github.io/romerovich/#parte-22) — 31 Mar 2026
+- [Parte 23 — Mercados Financieros Globales: El Peor Mes desde 2008](https://miguel1931.github.io/romerovich/#parte-23) — 1 Abr 2026
+- [Parte 24 — Gas en Mercados Asiáticos: Crisis LNG Estructural](https://miguel1931.github.io/romerovich/#parte-24) — 1 Abr 2026
+- [Parte 25 — Hostilidades: Día 36 del Conflicto](https://miguel1931.github.io/romerovich/#parte-25) — 4 Abr 2026
+- [Parte 26 — Edificios Impactados en Israel: Registro de Daños](https://miguel1931.github.io/romerovich/#parte-26) — 4 Abr 2026
+- [Parte 27 — Actualización de Frentes: 5 de Abril](https://miguel1931.github.io/romerovich/#parte-27) — 5 Abr 2026
+- [Parte 28 — Probabilidad de Fin de la Guerra en Semanas](https://miguel1931.github.io/romerovich/#parte-28) — 5 Abr 2026
+- [Parte 29 — Hostilidades: 6 de Abril](https://miguel1931.github.io/romerovich/#parte-29) — 6 Abr 2026
+- [Parte 30 — Ultimátum Trump: El Día D](https://miguel1931.github.io/romerovich/#parte-30) — 7 Abr 2026
+- [Parte 31 — Ecos de Paz en Islamabad: Alto el Fuego Frágil](https://miguel1931.github.io/romerovich/#parte-31) — 11 Abr 2026
+
+## Contexto del Proyecto
+
+**Formato:** Archivo HTML estático de página única, estilo documento clasificado en papel envejecido.
+**Idioma:** Español.
+**Personajes:**
+- **General Romerovich:** El destinatario de todos los partes de inteligencia; usuario real en conversación con IA.
+- **Deepovich:** El oficial de enlace ficticio; voz narrativa de los análisis, interpretada por Claude (Anthropic).
+
+**Frentes cubiertos:**
+1. Frente Persa (Irán) — ataques nucleares, desescalada, negociaciones en Omán e Islamabad
+2. Frente del Líbano (Hezbolá) — quinta invasión terrestre israelí, El-Khiam, zona de seguridad
+3. Frente de Yemen (Hutíes) — entrada en conflicto el 28 de marzo, amenaza al Mar Rojo
+4. Frente Marítimo — cierre del Estrecho de Ormuz, peajes iraníes, crisis de LNG
+5. Frente Tecnológico — Anthropic vs. Pentágono, demanda judicial, xAI/Musk
+6. Frente Económico — mercados financieros, petróleo Brent +90%, gas LNG en Asia
+7. Frente de Irak — movilización ante Sistani, riesgo de sexto frente (pospuesto)
+
+**Hitos narrativos clave:**
+- 28 feb 2026: Inicio del conflicto, muerte del Líder Supremo Jamenéi
+- 20 mar 2026: Escalada nuclear (Natanz destruido; misiles sobre Dimona y Arad)
+- 28 mar 2026: Entrada de Yemen en el conflicto
+- 7 abr 2026: Ultimátum de Trump; alto el fuego mediado por Pakistán
+- 11 abr 2026: Primera negociación directa EE.UU.–Irán desde 1979 en Islamabad
+
+## Fuente
+
+Conversación real entre un usuario (General Romerovich) y Claude (Anthropic), exportada y formateada como expediente de inteligencia ficticio.
+URL del proyecto: https://miguel1931.github.io/romerovich/
+Repositorio: https://github.com/miguel1931/romerovich
