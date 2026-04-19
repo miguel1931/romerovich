@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>La guerra como mercado: Irán × Polymarket</title>
+  <style>
+    :root {
+      --bg: #05060a;
+      --bg-alt: #0b0d14;
+      --accent: #ff3366;
+      --accent-soft: #ff7a9a;
+      --text-main: #f5f5f7;
+      --text-muted: #9ca3af;
+      --line: #272a35;
+      --card: #111320;
+      --chip: #1f2233;
+      --good: #22c55e;
+      --bad: #ef4444;
+      --warn: #eab308;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+      --shadow-chip: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at top, #151827 0, #05060a 55%);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      padding: 40px 16px 80px;
+    }
+
+    .page { max-width: 1100px; margin: 0 auto; }
+
+    .tagline {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 11px;
+      color: var(--accent-soft);
+      margin-bottom: 8px;
+    }
+
+    .headline {
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 14px;
+    }
+
+    .headline span { color: var(--accent); }
+
+    .subhead {
+      max-width: 680px;
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .meta-chip {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: var(--radius-pill);
+      padding: 6px 14px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-dot {
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,51,102,0.6); }
+      50% { box-shadow: 0 0 0 5px rgba(255,51,102,0); }
+    }
+
+    /* STAT BAR */
+    .stat-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 880px) {
+      .stat-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 520px) {
+      .stat-bar { grid-template-columns: 1fr; }
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #111827, #0b0f1a);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--stat-glow, transparent);
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    .stat-card.red  { --stat-glow: radial-gradient(circle at top left, #ef4444, transparent 60%); border-color: rgba(239,68,68,0.35); }
+    .stat-card.blue { --stat-glow: radial-gradient(circle at top left, #38bdf8, transparent 60%); border-color: rgba(56,189,248,0.35); }
+    .stat-card.green { --stat-glow: radial-gradient(circle at top left, #22c55e, transparent 60%); border-color: rgba(34,197,94,0.35); }
+    .stat-card.warn { --stat-glow: radial-gradient(circle at top left, #eab308, transparent 60%); border-color: rgba(234,179,8,0.35); }
+
+    .stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card.red  .stat-value { color: #fca5a5; }
+    .stat-card.blue .stat-value { color: #7dd3fc; }
+    .stat-card.green .stat-value { color: #86efac; }
+    .stat-card.warn .stat-value  { color: #fde68a; }
+
+    .stat-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+      gap: 26px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    /* TIMELINE */
+    .timeline {
+      background: linear-gradient(145deg, #05060a, #090b13);
+      border-radius: var(--radius-lg);
+      padding: 22px 22px 26px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(248,113,113,0.1), transparent 55%);
+      pointer-events: none;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(51, 65, 85, 0.9);
+    }
+
+    .legend-dot {
+      width: 9px; height: 9px;
+      border-radius: 999px;
+    }
+
+    .legend-dot--war    { background: #f97316; }
+    .legend-dot--news   { background: #22c55e; }
+    .legend-dot--market { background: #38bdf8; }
+
+    .timeline-body {
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .timeline-line {
+      position: absolute;
+      top: 0; bottom: 0; left: 7px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), #38bdf8);
+      opacity: 0.6;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 16px 14px 18px 18px;
+      margin-bottom: 12px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.97);
+      border: 1px solid rgba(30, 64, 175, 0.6);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 30px rgba(15,23,42,0.85);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .timeline-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(15,23,42,0.95);
+      border-color: rgba(56,189,248,0.4);
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -14px; top: 17px;
+      width: 12px; height: 12px;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 2.5px solid var(--item-dot, var(--accent));
+      box-shadow: 0 0 0 4px var(--item-dot-glow, rgba(248,113,113,0.2));
+    }
+
+    .phase-1  { --item-dot: #f97316; --item-dot-glow: rgba(249,115,22,0.2); }
+    .phase-2  { --item-dot: #ef4444; --item-dot-glow: rgba(239,68,68,0.25); }
+    .phase-3  { --item-dot: #f97316; --item-dot-glow: rgba(249,115,22,0.2); }
+    .phase-4  { --item-dot: #ef4444; --item-dot-glow: rgba(239,68,68,0.25); }
+    .phase-5  { --item-dot: #eab308; --item-dot-glow: rgba(234,179,8,0.2); }
+    .phase-6  { --item-dot: #38bdf8; --item-dot-glow: rgba(56,189,248,0.2); }
+    .phase-7  { --item-dot: #ef4444; --item-dot-glow: rgba(239,68,68,0.3); }
+    .phase-8  { --item-dot: #22c55e; --item-dot-glow: rgba(34,197,94,0.2); }
+    .phase-9  { --item-dot: #a855f7; --item-dot-glow: rgba(168,85,247,0.2); }
+
+    .timeline-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent-soft);
+      margin-bottom: 4px;
+    }
+
+    .timeline-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timeline-title-main {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 720px) {
+      .timeline-row { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .pill {
+      background: var(--chip);
+      border-radius: var(--radius-md);
+      padding: 10px 10px;
+      border: 1px solid rgba(51,65,85,0.9);
+    }
+
+    .pill-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+    }
+
+    .pill-dot {
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .pill--war  .pill-dot { background: #f97316; }
+    .pill--news .pill-dot { background: #22c55e; }
+    .pill--market .pill-dot { background: #38bdf8; }
+
+    .pill-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+    }
+
+    .pill-text { font-size: 0.78rem; line-height: 1.45; }
+
+    .pill--war    { border-color: rgba(249,115,22,0.6); }
+    .pill--news   { border-color: rgba(34,197,94,0.6); }
+    .pill--market { border-color: rgba(56,189,248,0.6); }
+
+    /* Probability bar */
+    .prob-bar-wrap {
+      margin-top: 7px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 4px;
+      overflow: hidden;
+      height: 5px;
+    }
+
+    .prob-bar {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(to right, #38bdf8, #a78bfa);
+      transition: width 0.4s ease;
+    }
+
+    .prob-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .prob-highlight { color: #7dd3fc; font-weight: 700; }
+
+    /* insider badge */
+    .insider-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.5);
+      border-radius: var(--radius-pill);
+      padding: 3px 9px;
+      color: #fca5a5;
+      margin-top: 6px;
+    }
+
+    /* SIDEBAR */
+    .sidebar { display: flex; flex-direction: column; gap: 18px; }
+
+    .card {
+      background: radial-gradient(circle at top, #111827 0, #020617 55%);
+      border-radius: var(--radius-lg);
+      padding: 16px 16px 18px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .card-main { font-size: 0.88rem; margin-bottom: 10px; }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .chip {
+      background: var(--chip);
+      border-radius: var(--radius-pill);
+      padding: 5px 11px;
+      font-size: 0.73rem;
+      border: 1px solid rgba(51,65,85,0.9);
+      white-space: nowrap;
+    }
+
+    .chip--good  { border-color: rgba(34,197,94,0.7);  color: #bbf7d0; }
+    .chip--bad   { border-color: rgba(239,68,68,0.7);  color: #fecaca; }
+    .chip--warn  { border-color: rgba(234,179,8,0.7);  color: #fef3c7; }
+    .chip--blue  { border-color: rgba(56,189,248,0.7); color: #bae6fd; }
+
+    /* Trader cards */
+    .trader {
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(51,65,85,0.8);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .trader:last-child { margin-bottom: 0; }
+
+    .trader-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .trader-profit {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #86efac;
+      margin-bottom: 3px;
+    }
+
+    .trader-detail {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .trader--red   { border-color: rgba(239,68,68,0.5); }
+    .trader--blue  { border-color: rgba(56,189,248,0.4); }
+    .trader--warn  { border-color: rgba(234,179,8,0.4); }
+
+    .question-list {
+      list-style: none;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .question-list li {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 14px;
+      line-height: 1.4;
+    }
+
+    .question-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-soft);
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      border-top: 1px dashed rgba(75,85,99,0.6);
+      padding-top: 10px;
+      line-height: 1.5;
+    }
+
+    .sources {
+      margin-top: 40px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 16px;
+    }
+
+    .sources a {
+      color: #7dd3fc;
+      text-decoration: none;
+    }
+
+    .sources a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- CABECERA -->
+  <div class="tagline">Infografía narrativa · Guerra & mercados de predicción</div>
+  <h1 class="headline">
+    La guerra como <span>mercado</span>: Irán × Polymarket
+  </h1>
+  <p class="subhead">
+    Desde el bombardeo a la embajada iraní en Damasco (abril 2024) hasta la "Guerra de los Doce Días" (junio 2025),
+    la escalada Irán-Israel generó más de 529 millones de dólares en apuestas. Aquí, la fricción entre lo que pasa en el frente,
+    lo que dicen los medios y lo que dice el dinero.
+  </p>
+
+  <div class="meta-row">
+    <div class="meta-chip">
+      <span class="meta-dot"></span>
+      Timeline basado en hechos reales · 2024–2026
+    </div>
+    <div class="meta-chip">⌛ Abril 2024 → Febrero 2026</div>
+    <div class="meta-chip">🎲 $529M en apuestas documentadas</div>
+    <div class="meta-chip">⚖️ Primer caso de insider trading imputado</div>
+  </div>
+
+  <!-- STAT BAR -->
+  <div class="stat-bar">
+    <div class="stat-card blue">
+      <div class="stat-label">Mayor mercado · Volumen total</div>
+      <div class="stat-value">$529M</div>
+      <div class="stat-sub">"US strikes Iran by…" — récord absoluto de Polymarket</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Top trader · Beneficio total</div>
+      <div class="stat-value">~$967K</div>
+      <div class="stat-sub">83% win rate global · 93% en apuestas >$10.000</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="stat-label">Insider trading documentado</div>
+      <div class="stat-value">$1,2M</div>
+      <div class="stat-sub">6 wallets coordinadas · 28 feb 2026 · fondadas en 24h</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Primer imputado militar</div>
+      <div class="stat-value">$162K</div>
+      <div class="stat-sub">Mayor israelí usó info clasificada para apostar</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- TIMELINE -->
+    <section class="timeline">
+      <div class="timeline-header">
+        <div class="timeline-title">Línea de tiempo · Tres capas</div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot legend-dot--war"></span>Guerra</div>
+          <div class="legend-item"><span class="legend-dot legend-dot--news"></span>Medios</div>
+          <div class="legend-item"><span class="legend-dot legend-dot--market"></span>Polymarket</div>
+        </div>
+      </div>
+
+      <div class="timeline-body">
+        <div class="timeline-line"></div>
+
+        <!-- FASE 1 -->
+        <article class="timeline-item phase-1">
+          <div class="timeline-tag">Fase 1 · Detonante</div>
+          <div class="timeline-date">1 de abril de 2024</div>
+          <h2 class="timeline-title-main">Israel bombardea el consulado iraní en Damasco</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">Ataque aéreo israelí mata a siete oficiales de la Guardia Revolucionaria iraní (IRGC), incluido el General Zahedi. Irán promete represalia directa por primera vez.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">La cobertura global se dispara. ¿Atacará Irán desde su territorio? Los analistas debaten si esto rompe las reglas no escritas del conflicto proxy.</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">Abren mercados sobre "Irán ataca Israel directamente antes de X". Volumen aún contenido. Los traders empiezan a posicionarse.</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:22%"></div></div>
+              <div class="prob-row"><span>Prob. ataque</span><span class="prob-highlight">~22%</span></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- FASE 2 -->
+        <article class="timeline-item phase-2">
+          <div class="timeline-tag">Fase 2 · Operación True Promise</div>
+          <div class="timeline-date">13 de abril de 2024</div>
+          <h2 class="timeline-title-main">Iran lanza 330 proyectiles contra Israel. El volumen explota.</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">"Operación Promesa Verdadera": 170 drones, 30 misiles de crucero y 120 misiles balísticos. Israel intercepta el 99% con apoyo de EE.UU., Jordania y Reino Unido.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">Breaking news a nivel mundial durante horas. Imágenes del sky de Tel Aviv iluminado. CNN, BBC y Al Jazeera en modo guerra total.</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">El mercado de "ataque significativo" salta al 97%+ y se resuelve YES. Aparecen wallets nuevas con apuestas de cinco cifras que entraron horas antes.</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:97%"></div></div>
+              <div class="prob-row"><span>Prob. ataque</span><span class="prob-highlight">97% → resuelto YES</span></div>
+              <div class="insider-badge">⚠ Patrón de insider detectado</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- FASE 3 -->
+        <article class="timeline-item phase-3">
+          <div class="timeline-tag">Fase 3 · Respuesta calculada</div>
+          <div class="timeline-date">18–19 de abril de 2024</div>
+          <h2 class="timeline-title-main">Israel responde con golpe quirúrgico. Escalada controlada.</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">Israel lanza ataques limitados en territorio iraní. El daño es intencionalmente reducido: un mensaje, no una guerra. Ambas partes buscan la salida.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">Los medios hablan de "de-escalada estratégica". Las capitales occidentales respiran. La narrativa cambia de "¿guerra regional?" a "¿hasta aquí?".</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">Los mercados de "escalada mayor" caen bruscamente. Los que apostaron por la contención ganan. Ciclo corto de apuestas, beneficios rápidos.</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:18%"></div></div>
+              <div class="prob-row"><span>Prob. escalada mayor</span><span class="prob-highlight">↓ 18%</span></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- FASE 4 -->
+        <article class="timeline-item phase-4">
+          <div class="timeline-tag">Fase 4 · Segunda oleada</div>
+          <div class="timeline-date">1 de octubre de 2024</div>
+          <h2 class="timeline-title-main">Irán lanza 200 misiles. El doble que en abril.</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">Segunda oleada iraní: 180-200 misiles balísticos, "casi el doble de alcance" que abril. En respuesta al asesinato de Nasrallah (Hezbolá) y operaciones en Gaza y Líbano.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">El contexto importa: el ataque llega en medio de una ofensiva israelí en Líbano. Los medios conectan los frentes. La complejidad narrativa aumenta.</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">Mercado "Another Iran strike on Israel in 2024": $1,8M de volumen. Lanzado el 2 de octubre. Resuelto YES 24 horas después.</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:88%"></div></div>
+              <div class="prob-row"><span>Volumen</span><span class="prob-highlight">$1,8M · $817K en "Israel strikes Iran oil"</span></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- FASE 5 -->
+        <article class="timeline-item phase-5">
+          <div class="timeline-tag">Fase 5 · Golpe masivo israelí</div>
+          <div class="timeline-date">26 de octubre de 2024</div>
+          <h2 class="timeline-title-main">Israel ataca 20+ objetivos en Irán. El mayor golpe desde la guerra Iran-Irak.</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">"Operación Días de Represalia": tres oleadas de ataques en más de 20 localizaciones iraníes. Instalaciones militares, radares, baterías antiaéreas. El mayor ataque israelí a Irán.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">La prensa iraní minimiza los daños, la israelí los maximiza. Las imágenes satelitales se convierten en el árbitro. Cinco días de análisis de daños.</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">Mercado "Israel military action against Iran by end of 2024" ($10,1M en volumen) se resuelve YES. Las wallets que apostaron hace semanas cosechan.</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:100%"></div></div>
+              <div class="prob-row"><span>Mercado nuclear · Volumen</span><span class="prob-highlight">$10,1M</span></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- FASE 6 -->
+        <article class="timeline-item phase-6">
+          <div class="timeline-tag">Fase 6 · Guerra de los Doce Días</div>
+          <div class="timeline-date">13–24 de junio de 2025</div>
+          <h2 class="timeline-title-main">Israel ataca instalaciones nucleares iraníes. 12 días de guerra abierta.</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">Ataque israelí sorpresa sobre infraestructura militar y nuclear iraní. 12 días de conflicto armado directo, el más intenso de la historia entre ambos países.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">La "Guerra de los Doce Días" domina todas las portadas durante dos semanas. El debate sobre proliferación nuclear vuelve al centro del discurso global.</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">El trader "ricosuave666" apuesta decenas de miles con precisión quirúrgica sobre operaciones militares israelíes. Beneficio: ~$150.000. Comienza la investigación.</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:76%"></div></div>
+              <div class="prob-row"><span>Prob. acción militar antes de julio</span><span class="prob-highlight">$4,5M en volumen</span></div>
+              <div class="insider-badge">⚠ Wallet "ricosuave666" bajo investigación</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- FASE 7 -->
+        <article class="timeline-item phase-7">
+          <div class="timeline-tag">Fase 7 · Ataque conjunto EE.UU.–Israel</div>
+          <div class="timeline-date">28 de febrero de 2026</div>
+          <h2 class="timeline-title-main">EE.UU. e Israel atacan juntos. $529M apostados. Seis wallets ganan $1,2M.</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">Operación conjunta EE.UU.–Israel. Ataque masivo a territorio iraní que incluye la muerte del Ayatollah Khamenei. El líder supremo de Irán, eliminado.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">El congresista Torres envía carta a la CFTC exigiendo investigación. Los medios ya no solo cubren la guerra: cubren el mercado que apostó por ella.</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">Récord absoluto: $529M de volumen en un solo día. Seis wallets fundadas en las 24h anteriores al ataque ganan 1,2M$ apostando específicamente al contrato "US strikes Iran by Feb 28".</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:100%"></div></div>
+              <div class="prob-row"><span>Volumen total</span><span class="prob-highlight">$529M · récord histórico</span></div>
+              <div class="insider-badge">⚠ 6 wallets coordinadas · $1,2M en ganancias sospechosas</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- FASE 8 -->
+        <article class="timeline-item phase-8">
+          <div class="timeline-tag">Fase 8 · El primer imputado</div>
+          <div class="timeline-date">Enero–Febrero 2026</div>
+          <h2 class="timeline-title-main">Un mayor del Ejército del Aire israelí imputado por usar intel clasificada para apostar.</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">El reservista militar supo que los aviones israelíes estaban en ruta hacia Irán antes del ataque. Usó esa información para colocar una apuesta en Polymarket.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">Times of Israel y NBC detallan los cargos: soborno y obstrucción a la justicia. Es el primer caso públicamente conocido de insider trading militar en mercados de predicción.</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">Beneficio de la apuesta: $162.663, acordados dividir a partes iguales. La plataforma reescribe sus reglas para prohibir explícitamente operar con información confidencial.</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:100%"></div></div>
+              <div class="prob-row"><span>Beneficio single bet</span><span class="prob-highlight">$162.663</span></div>
+              <div class="insider-badge">⚖ Imputado · Cargos: soborno y obstrucción</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- FASE 9 -->
+        <article class="timeline-item phase-9">
+          <div class="timeline-tag">Fase 9 · Resaca regulatoria</div>
+          <div class="timeline-date">Marzo–Abril 2026</div>
+          <h2 class="timeline-title-main">La guerra baja de volumen. El debate sobre qué debe poder cotizar, sube.</h2>
+          <div class="timeline-row">
+            <div class="pill pill--war">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Guerra</span></div>
+              <div class="pill-text">Negociaciones de alto el fuego en curso. Los mercados de "ceasefire broken by…" ($5,1M de volumen) siguen activos. La incertidumbre persiste.</div>
+            </div>
+            <div class="pill pill--news">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Medios</span></div>
+              <div class="pill-text">Polymarket se disculpa por haber permitido un mercado sobre "piloto estadounidense derribado en Irán". Entra la política. El Congreso abre investigaciones.</div>
+            </div>
+            <div class="pill pill--market">
+              <div class="pill-header"><span class="pill-dot"></span><span class="pill-label">Polymarket</span></div>
+              <div class="pill-text">Se archivan mercados sensibles. La CFTC bajo presión del Congreso. La pregunta que define el debate: ¿existen eventos que no deberían tener precio?</div>
+              <div class="prob-bar-wrap"><div class="prob-bar" style="width:55%"></div></div>
+              <div class="prob-row"><span>Mercado ceasefire</span><span class="prob-highlight">$5,1M · en curso</span></div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <section class="card">
+        <div class="card-title">Traders bajo el microscopio</div>
+
+        <div class="trader trader--red">
+          <div class="trader-name">Trader anónimo (identidad desconocida)</div>
+          <div class="trader-profit">~$967.000</div>
+          <div class="trader-detail">Win rate 83% global · 93% en apuestas >$10K · Predijo correctamente: golpe de oct. 2024, Guerra de los 12 Días y ataque de feb. 2026.</div>
+        </div>
+
+        <div class="trader trader--warn">
+          <div class="trader-name">"Magamyman"</div>
+          <div class="trader-profit">$553.000</div>
+          <div class="trader-detail">Apostó por la muerte del Ayatollah Khamenei justo antes del ataque israelí de feb. 2026. También ganó $300K en los indultos de Biden.</div>
+        </div>
+
+        <div class="trader trader--blue">
+          <div class="trader-name">"ricosuave666"</div>
+          <div class="trader-profit">~$150.000</div>
+          <div class="trader-detail">Precisión quirúrgica sobre operaciones militares israelíes en junio 2025. Investigado por posible uso de información privilegiada.</div>
+        </div>
+
+        <div class="trader trader--red">
+          <div class="trader-name">Mayor israelí (imputado)</div>
+          <div class="trader-profit">$162.663</div>
+          <div class="trader-detail">Primera imputación criminal documentada. Usó información clasificada sobre ataques en curso. Cargos: soborno y obstrucción a la justicia.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">Mercados clave · Volúmenes</div>
+        <div class="chip-row">
+          <span class="chip chip--blue">$529M · US strikes Iran</span>
+          <span class="chip chip--blue">$46M · Iran×Israel ends by…</span>
+          <span class="chip chip--blue">$10,1M · Israel strikes nuclear</span>
+          <span class="chip chip--blue">$5,1M · Ceasefire broken</span>
+          <span class="chip chip--blue">$4,5M · Action before July</span>
+          <span class="chip chip--blue">$1,8M · Another Iran strike</span>
+          <span class="chip chip--warn">$45M · Khamenei leaves power</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-title">Preguntas incómodas</div>
+        <ul class="question-list">
+          <li>¿Quién necesita información privilegiada si el ejército más poderoso del mundo es aliado tuyo?</li>
+          <li>¿Es Polymarket un termómetro de la realidad o un acelerador del cinismo geopolítico?</li>
+          <li>¿Debe existir un mercado donde cada víctima es una variable financiera?</li>
+          <li>¿Qué significa que un alto el fuego tenga precio minuto a minuto y que haya gente que lo sepa antes?</li>
+          <li>¿La CFTC puede regular algo que técnicamente no es un contrato de futuros?</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <div class="card-title">Contexto · ¿Qué es Polymarket?</div>
+        <div class="card-main">
+          Plataforma de mercados de predicción basada en blockchain (Polygon). Los usuarios apuestan USDC sobre si un evento ocurrirá. Los precios reflejan probabilidades implícitas. No requiere KYC sólido. Opera desde 2020.
+        </div>
+        <div class="chip-row">
+          <span class="chip chip--warn">Guerra como activo</span>
+          <span class="chip chip--bad">Insider trading</span>
+          <span class="chip chip--good">Datos en tiempo real</span>
+          <span class="chip chip--blue">Sin regulación clara</span>
+        </div>
+        <div class="footer-note">
+          Polymarket reescribió sus normas en 2026 para prohibir operar con información confidencial o cuando el usuario pueda influir en el resultado — pero la aplicación sigue siendo un problema abierto.
+        </div>
+      </section>
+
+    </aside>
+  </div>
+
+  <!-- FUENTES -->
+  <div class="sources">
+    <strong>Fuentes:</strong>
+    <a href="https://www.npr.org/2026/02/12/nx-s1-5712801/polymarket-bets-traders-israel-military" target="_blank">NPR · Israelis accused of using military secrets</a> ·
+    <a href="https://www.timesofisrael.com/two-indicted-for-using-classified-info-to-place-online-bets-on-military-operations/" target="_blank">Times of Israel · Dos imputados</a> ·
+    <a href="https://www.npr.org/2026/03/01/nx-s1-5731568/polymarket-trade-iran-supreme-leader-killing" target="_blank">NPR · Magamyman $553K</a> ·
+    <a href="https://techcrunch.com/2026/03/01/polymarket-saw-529m-traded-on-bets-tied-to-bombing-of-iran/" target="_blank">TechCrunch · $529M record</a> ·
+    Wikipedia: April 2024 Iranian strikes · October 2024 Iranian strikes · Twelve-Day War
+  </div>
+
+</div>
+</body>
+</html>
